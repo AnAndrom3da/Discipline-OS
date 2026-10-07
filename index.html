@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#b3001b">
+<title>DISCIPLINE // OS — Personal Command Center</title>
+<style>
+:root{
+  --bg:#07080b;--panel:#0d1015;--panel2:#11151c;--line:#202630;--text:#f4f6f8;
+  --muted:#8d96a3;--accent:#b3001b;--accent2:#e01838;--good:#39d98a;--warn:#f0b429;
+  --bad:#ff5d67;--blue:#58a6ff;--shadow:0 20px 60px rgba(0,0,0,.35);--radius:18px;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 80% -10%,rgba(179,0,27,.16),transparent 35%),var(--bg);color:var(--text);font:14px/1.5 Inter,Segoe UI,Arial,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}
+.app{display:flex;min-height:100vh}.sidebar{position:fixed;z-index:30;left:0;top:0;bottom:0;width:255px;background:rgba(8,10,14,.96);border-right:1px solid var(--line);padding:20px 14px;overflow:auto}
+.brand{display:flex;gap:12px;align-items:center;padding:6px 8px 22px}.brandMark{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--accent),#4c0010);display:grid;place-items:center;font-weight:900}.brand b{display:block;font-size:14px;letter-spacing:.12em}.brand span{color:var(--muted);font-size:10px;letter-spacing:.15em}
+.navTitle{margin:18px 10px 7px;color:#5f6875;font-size:10px;font-weight:800;letter-spacing:.16em}.nav button{width:100%;border:1px solid transparent;background:transparent;color:#9da6b2;text-align:left;padding:10px 11px;border-radius:10px;margin:2px 0;display:flex;gap:10px;align-items:center}.nav button:hover{background:#12161d;color:#fff}.nav button.active{background:rgba(179,0,27,.15);border-color:rgba(179,0,27,.35);color:#fff}.nav .num{width:23px;color:#606976;font-size:10px}.sideStats{margin-top:18px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#0b0e13}.sideStats .row{display:flex;justify-content:space-between;padding:5px 0}.sideStats small{color:var(--muted)}.main{margin-left:255px;width:calc(100% - 255px);padding:22px;min-width:0}.topbar{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 0 18px;background:linear-gradient(var(--bg) 70%,transparent)}.topbar h1{font-size:21px;margin:0}.topbar p{margin:2px 0 0;color:var(--muted)}.actions{display:flex;gap:7px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#11151c;color:#fff;padding:9px 12px;border-radius:10px}.btn:hover{border-color:#414956;background:#171c24}.btn.primary{background:var(--accent);border-color:var(--accent);font-weight:700}.btn.primary:hover{background:var(--accent2)}.btn.good{border-color:rgba(57,217,138,.35);color:var(--good)}.btn.danger{border-color:rgba(255,93,103,.35);color:#ff8790}.btn.ghost{background:transparent}.iconBtn{width:38px;height:38px;padding:0;display:grid;place-items:center}
+.view{display:none}.view.active{display:block}.grid{display:grid;gap:14px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.card{background:linear-gradient(180deg,rgba(17,21,28,.98),rgba(11,14,19,.98));border:1px solid var(--line);border-radius:var(--radius);padding:17px;box-shadow:0 8px 30px rgba(0,0,0,.12)}.card h2,.card h3{margin:0 0 5px}.eyebrow{font-size:10px;color:#697382;letter-spacing:.16em;font-weight:800;text-transform:uppercase}.muted{color:var(--muted)}.big{font-size:31px;font-weight:900;letter-spacing:-.04em}.accent{color:var(--accent2)}.good{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)}
+.hero{padding:22px;background:linear-gradient(135deg,rgba(179,0,27,.16),rgba(12,15,21,.96) 55%);border-color:rgba(179,0,27,.3)}.hero h2{font-size:27px}.hero p{max-width:760px;color:#aeb6c1}
+.stat{min-height:125px}.stat .value{font-size:29px;font-weight:900;margin-top:9px}.stat .sub{color:var(--muted);font-size:12px;margin-top:3px}
+.progress{height:8px;background:#20252e;border-radius:99px;overflow:hidden}.progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:inherit;transition:width .25s}.progress.goodbar>i{background:linear-gradient(90deg,#22a96a,var(--good))}
+.ring{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent2) var(--pct),#242a33 0);position:relative}.ring:after{content:"";position:absolute;inset:12px;background:#0c1015;border-radius:50%}.ring .ringText{position:relative;z-index:1;text-align:center}.ring strong{display:block;font-size:30px}.ring small{color:var(--muted)}
+.todayHero{display:flex;align-items:center;gap:25px}.todayHero .grow{flex:1}.quote{font-size:18px;line-height:1.45;font-weight:700}.quote:before{content:"“";color:var(--accent2);font-size:30px;margin-right:3px}
+.sectionHead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:24px 0 10px}.sectionHead h2{margin:0;font-size:17px}.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{border:1px solid var(--line);border-radius:99px;padding:5px 9px;color:#9da6b2;font-size:11px;background:#0d1117}.chip.active{border-color:rgba(179,0,27,.5);color:#fff;background:rgba(179,0,27,.12)}
+.taskList{display:grid;gap:7px}.task{display:flex;align-items:center;gap:11px;border:1px solid var(--line);background:#0c1015;padding:11px 12px;border-radius:12px}.task:hover{border-color:#363d48}.task.done{opacity:.58}.task.done .taskName{text-decoration:line-through}.check{width:21px;height:21px;accent-color:var(--accent2);flex:none}.taskMain{flex:1;min-width:0}.taskName{font-weight:700}.taskMeta{display:flex;gap:7px;flex-wrap:wrap;color:#727d8b;font-size:11px}.priority{font-size:9px;padding:3px 6px;border-radius:99px;border:1px solid var(--line);text-transform:uppercase}.priority.high{color:#ff7d88;border-color:rgba(255,93,103,.3)}.priority.medium{color:#f0c25e}.taskBtns{display:flex;gap:4px}.taskBtns button{padding:5px 7px;font-size:11px}
+.kpiRow{display:flex;gap:18px;flex-wrap:wrap}.kpi{min-width:120px}.kpi strong{font-size:20px}.kpi small{display:block;color:var(--muted)}
+.table{width:100%;border-collapse:collapse}.table th,.table td{padding:9px;border-bottom:1px solid var(--line);text-align:left}.table th{font-size:10px;color:#697382;text-transform:uppercase;letter-spacing:.08em}.table td{font-size:12px}
+.heat{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}.heat i{aspect-ratio:1;border-radius:4px;background:#171c23;border:1px solid #202630}.heat i.l1{background:#3b1720}.heat i.l2{background:#681526}.heat i.l3{background:#94152b}.heat i.l4{background:#d31a3b}.heat i.l5{background:#ff3156}
+.form{display:grid;gap:10px}.formRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field label{display:block;color:#8e98a5;font-size:11px;margin-bottom:5px}.input,.select,.textarea{width:100%;background:#090c11;border:1px solid var(--line);color:#fff;border-radius:10px;padding:10px;outline:none}.textarea{min-height:100px;resize:vertical}.input:focus,.select:focus,.textarea:focus{border-color:rgba(179,0,27,.65);box-shadow:0 0 0 3px rgba(179,0,27,.1)}
+.modalBack{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(5px);z-index:100;display:none;align-items:center;justify-content:center;padding:18px}.modalBack.open{display:flex}.modal{width:min(700px,100%);max-height:90vh;overflow:auto;background:#0c1015;border:1px solid #303743;border-radius:18px;box-shadow:var(--shadow);padding:18px}.modalHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.modalHead h2{margin:0}.toastBox{position:fixed;right:18px;bottom:18px;z-index:200;display:grid;gap:7px}.toast{background:#141920;border:1px solid #38404b;border-left:3px solid var(--accent2);padding:11px 14px;border-radius:10px;box-shadow:var(--shadow);animation:toastIn .2s ease}.toast.good{border-left-color:var(--good)}@keyframes toastIn{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.palette{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:110;display:none;align-items:flex-start;justify-content:center;padding-top:10vh}.palette.open{display:flex}.paletteBox{width:min(680px,94%);background:#0d1117;border:1px solid #343b47;border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}.paletteBox input{width:100%;padding:17px;background:#090c10;border:0;border-bottom:1px solid var(--line);color:#fff;outline:0;font-size:16px}.palItem{padding:12px 15px;border-bottom:1px solid #1b2028;display:flex;justify-content:space-between;cursor:pointer}.palItem:hover{background:#171c24}.palItem small{color:#687281}
+.timer{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:25px}.timerTime{font-size:72px;font-weight:900;letter-spacing:-.06em}.timerBar{width:min(500px,100%)}.skillGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.skillCard{padding:14px;border:1px solid var(--line);border-radius:14px;background:#0b0f14}.skillCard h3{margin:0 0 8px}.mins{font-size:25px;font-weight:900}.miniBtns{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:10px}.miniBtns button{padding:7px 2px;font-size:10px}
+.goal{border:1px solid var(--line);border-radius:14px;padding:14px;background:#0c1015}.goalTop{display:flex;justify-content:space-between;gap:10px}.goal h3{margin:0}.milestone{display:flex;align-items:center;gap:8px;padding:6px 0;color:#9da6b2}.milestone input{accent-color:var(--accent2)}
+.note{border-left:3px solid var(--accent);padding:10px 12px;background:#0c1015;border-radius:0 10px 10px 0;margin-bottom:7px}.note b{display:block}.empty{padding:25px;text-align:center;color:#687281;border:1px dashed #29303a;border-radius:12px}
+.badge{display:inline-block;padding:4px 7px;border-radius:99px;background:#191e26;color:#aeb6c1;font-size:10px}.freeze{color:#7cc7ff}.dangerText{color:#ff7d88}.successText{color:var(--good)}
+.mobileNav{display:none}.sidebarClose{display:none}.compact .card{padding:12px}.compact .task{padding:8px}.reduced *{animation:none!important;transition:none!important}
+@media(max-width:1050px){.g4{grid-template-columns:repeat(2,1fr)}.skillGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){
+ .sidebar{transform:translateX(-100%);transition:.2s;width:270px}.sidebar.open{transform:none}.sidebarClose{display:block;position:absolute;right:10px;top:10px}.main{margin-left:0;width:100%;padding:14px 12px 80px}.topbar{align-items:flex-start}.g2,.g3,.g4{grid-template-columns:1fr}.todayHero{align-items:flex-start;flex-direction:column}.ring{width:125px;height:125px}.timerTime{font-size:53px}.mobileNav{display:flex;position:fixed;z-index:40;bottom:0;left:0;right:0;background:#0a0d12;border-top:1px solid var(--line);padding:7px;gap:5px}.mobileNav button{flex:1;border:0;background:transparent;color:#7d8794;font-size:9px;padding:7px 2px}.mobileNav button.active{color:#fff}.formRow{grid-template-columns:1fr}
+}
+/* =========================================================
+   CUSTOM DISCIPLINE CHECKBOXES
+========================================================= */
+
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 20px;
+    height: 20px;
+
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 6px;
+
+    background:
+        linear-gradient(145deg, #151515, #0b0b0b);
+
+    display: inline-grid;
+    place-content: center;
+
+    cursor: pointer;
+
+    transition:
+        border-color .18s ease,
+        background .18s ease,
+        box-shadow .18s ease,
+        transform .12s ease;
+    
+    flex-shrink: 0;
+}
+
+
+/* Hover */
+
+input[type="checkbox"]:hover {
+    border-color: rgba(179,0,27,.75);
+
+    box-shadow:
+        0 0 0 3px rgba(179,0,27,.08),
+        0 0 12px rgba(179,0,27,.12);
+}
+
+
+/* Click */
+
+input[type="checkbox"]:active {
+    transform: scale(.92);
+}
+
+
+/* Checked box */
+
+input[type="checkbox"]:checked {
+    background:
+        linear-gradient(135deg, #b3001b, #7d0013);
+
+    border-color: #b3001b;
+
+    box-shadow:
+        0 0 0 3px rgba(179,0,27,.08),
+        0 0 14px rgba(179,0,27,.20);
+}
+
+
+/* Checkmark */
+
+input[type="checkbox"]::before {
+    content: "";
+
+    width: 9px;
+    height: 5px;
+
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+
+    transform:
+        rotate(-45deg)
+        scale(0);
+
+    transition:
+        transform .16s ease;
+}
+
+
+/* Show checkmark */
+
+input[type="checkbox"]:checked::before {
+    transform:
+        rotate(-45deg)
+        scale(1);
+}
+
+
+/* Keyboard accessibility */
+
+input[type="checkbox"]:focus-visible {
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px rgba(179,0,27,.20),
+        0 0 0 1px #b3001b;
+}
+
+/* =========================================================
+   DISCIPLINE // OS SCROLLBARS
+========================================================= */
+
+
+/* Firefox */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #7d0013 #090909;
+}
+
+
+/* Chrome / Edge / Opera / Chromium */
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+
+/* Track */
+
+::-webkit-scrollbar-track {
+    background: #080808;
+}
+
+
+/* Scrollbar */
+
+::-webkit-scrollbar-thumb {
+    background:
+        linear-gradient(
+            180deg,
+            #b3001b,
+            #65000f
+        );
+
+    border-radius: 999px;
+
+    border: 2px solid #080808;
+
+    transition: background .2s ease;
+}
+
+
+/* Hover */
+
+::-webkit-scrollbar-thumb:hover {
+    background:
+        linear-gradient(
+            180deg,
+            #d00022,
+            #8f0017
+        );
+}
+
+
+/* Scrollbar corners */
+
+::-webkit-scrollbar-corner {
+    background: #080808;
+}
+
+/* =========================================================
+   TASK CHECKBOX ROW
+========================================================= */
+
+.task-check,
+.task-row,
+.task-item {
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .15s ease;
+}
+
+
+/* If the row contains a checked checkbox */
+
+.task-row:has(input[type="checkbox"]:checked),
+.task-item:has(input[type="checkbox"]:checked) {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(179,0,27,.10),
+            rgba(179,0,27,.025)
+        );
+
+    border-color:
+        rgba(179,0,27,.28);
+}
+
+.task-row:has(input[type="checkbox"]:checked) span,
+.task-item:has(input[type="checkbox"]:checked) .task-name {
+    color: rgba(255,255,255,.45);
+
+    text-decoration:
+        line-through;
+
+    text-decoration-color:
+        rgba(179,0,27,.65);
+
+    text-decoration-thickness: 1px;
+}
+
+.panel-scroll::-webkit-scrollbar {
+    width: 7px;
+}
+
+.panel-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.panel-scroll::-webkit-scrollbar-thumb {
+    background: rgba(179,0,27,.55);
+    border-radius: 999px;
+}
+
+.panel-scroll::-webkit-scrollbar-thumb:hover {
+    background: #b3001b;
+}
+
+
+/* =========================================================
+   START-DATE LOCK
+   The app stays locked until START_DATE.
+========================================================= */
+.startLock{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 50% 20%,rgba(179,0,27,.18),transparent 35%),#050609;color:var(--text)}
+.startLockBox{width:min(620px,100%);padding:34px;border:1px solid rgba(179,0,27,.35);border-radius:22px;background:linear-gradient(180deg,rgba(17,21,28,.98),rgba(8,10,14,.98));box-shadow:0 30px 100px rgba(0,0,0,.55);text-align:center}
+.startLockMark{width:58px;height:58px;margin:0 auto 18px;border-radius:16px;background:linear-gradient(135deg,var(--accent),#4c0010);display:grid;place-items:center;font-size:24px;font-weight:900;box-shadow:0 0 35px rgba(179,0,27,.2)}
+.startLock .eyebrow{margin-bottom:8px}.startLock h1{margin:0;font-size:30px;letter-spacing:-.04em}.startLock p{color:var(--muted);max-width:500px;margin:10px auto 0}.startLockDate{margin:24px 0 18px;padding:14px;border:1px solid var(--line);border-radius:13px;background:#090c11}.startLockDate strong{display:block;font-size:20px;color:#fff}.startLockDate span{display:block;margin-top:3px;color:var(--muted);font-size:12px}.startLockTime{font-size:12px;color:#697382}
+.startLock.open{display:grid}
+
+/* ---------- WORK ADD-ON (additive only) ---------- */
+.workGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}.workCard{border:1px solid var(--line);background:linear-gradient(180deg,rgba(17,21,28,.96),rgba(10,13,18,.96));border-radius:18px;padding:20px;box-shadow:0 12px 35px rgba(0,0,0,.18)}.workCard.wide{grid-column:1/-1}.workCard .workLabel{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--accent2);text-transform:uppercase}.workCard h2{margin:7px 0 8px;font-size:20px}.workCard h3{margin:14px 0 7px;font-size:14px}.workCard p{color:#c6ccd4;margin:7px 0}.workCard .workAnswer{margin-top:14px;padding:12px;border:1px dashed rgba(179,0,27,.4);border-radius:12px;background:rgba(179,0,27,.045)}.workCard .workMeta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.workCard .workMeta span{font-size:11px;color:var(--muted);padding:5px 8px;border:1px solid var(--line);border-radius:999px}.workReading{max-height:none}.workReading p{line-height:1.72;margin:0 0 13px;color:#cbd1d8}.workRecall{display:grid;grid-template-columns:1fr 1fr;gap:12px}.workRecallBox{padding:14px;border:1px solid var(--line);border-radius:13px;background:#090c11}.workRecallBox strong{display:block;margin-bottom:6px}.workWord{font-size:30px;font-weight:900;letter-spacing:-.04em}.workDefinition{font-size:15px;color:#fff}.workExample{margin-top:10px;padding-left:12px;border-left:2px solid var(--accent);color:#c6ccd4}.workChecklist{display:grid;gap:8px;margin-top:12px}.workChecklist div{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#090c11;color:#cbd1d8}.workDay{font-size:12px;color:var(--muted)}
+@media(max-width:850px){.workGrid{grid-template-columns:1fr}.workCard.wide{grid-column:auto}.workRecall{grid-template-columns:1fr}}
+/* ---------- STATUS SYSTEM ADD-ON ---------- */
+.topbarTitle .dateTimeLine{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}.topbarTitle .dateTimeLine p{margin:2px 0 0}.liveTime{font-variant-numeric:tabular-nums;font-weight:800;color:var(--accent2);letter-spacing:.04em}
+.priority.must{color:#fff;background:rgba(179,0,27,.55);border-color:var(--accent2);font-weight:800}
+.stBadge{font-size:9px;padding:3px 7px;border-radius:99px;border:1px solid var(--line);text-transform:uppercase;letter-spacing:.05em}
+.stBadge.st-done,.stChip.st-done{color:var(--good);border-color:rgba(57,217,138,.35)}.stBadge.st-missed,.stChip.st-missed{color:var(--bad);border-color:rgba(255,93,103,.35)}
+.stBadge.st-skipped,.stChip.st-skipped{color:var(--blue);border-color:rgba(88,166,255,.35)}.stBadge.st-impossible,.stChip.st-impossible{color:var(--warn);border-color:rgba(240,180,41,.35)}
+.stBadge.st-pending,.stChip.st-pending{color:var(--muted)}
+.task.st-missed{border-color:rgba(255,93,103,.3)}.task.st-skipped{opacity:.7;border-color:rgba(88,166,255,.25)}.task.st-impossible{opacity:.75;border-color:rgba(240,180,41,.25)}
+.task .reason{margin-top:3px;font-size:11px;color:var(--warn)}.taskBtns{flex-wrap:wrap;justify-content:flex-end}.taskBtns .qb{padding:5px 8px;font-size:12px;min-width:32px}
+.statusSummary{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.stChip{border:1px solid var(--line);border-radius:99px;padding:5px 10px;font-size:12px;background:#0d1117}.stChip b{font-size:14px}
+/* ---------- WORK: history + summary boxes ---------- */
+.workHead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.workNav{display:flex;align-items:center;gap:6px}.workNav .btn{padding:4px 11px}.workNavLabel{font-size:11px;color:var(--muted)}
+.workNote{margin-top:14px}.workNote label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px}.workNote .textarea{min-height:80px}
+
+</style>
+</head>
+<body>
+
+<div class="startLock" id="startLock">
+  <div class="startLockBox">
+    <div class="startLockMark">D</div>
+    <div class="eyebrow">DISCIPLINE // OS</div>
+    <h1>System locked until tomorrow.</h1>
+    <p>This command center is intentionally not active yet. Your first real day starts tomorrow, so today's unfinished boxes cannot affect your statistics or streak.</p>
+    <div class="startLockDate">
+      <strong>07 October 2026</strong>
+      <span>FIRST ACTIVE DAY</span>
+    </div>
+    <div class="startLockTime" id="startLockTime">Waiting for the start date…</div>
+  </div>
+</div>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+<button class="btn iconBtn sidebarClose" onclick="closeSidebar()">×</button>
+<div class="brand"><div class="brandMark">D</div><div><b>DISCIPLINE // OS</b><span>PERSONAL COMMAND CENTER</span></div></div>
+<div class="nav" id="nav"></div>
+<div class="sideStats">
+<div class="row"><small>Today</small><b id="sideScore">0%</b></div>
+<div class="row"><small>Streak</small><b id="sideStreak">0</b></div>
+<div class="row"><small>Freezes</small><b id="sideFreezes">0</b></div>
+</div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+<div class="topbarTitle"><h1 id="pageTitle">Command Center</h1><div class="dateTimeLine"><p id="dateText"></p><span class="liveTime" id="timeText">00:00:00</span></div></div>
+<div class="actions">
+<button class="btn" onclick="openPalette()">⌘K Command</button>
+<button class="btn" onclick="openTaskModal()">+ Task</button>
+<button class="btn primary" onclick="navigate('today')">Today</button>
+<button class="btn iconBtn" onclick="openSidebar()">☰</button>
+</div>
+</header>
+
+<section id="dashboard" class="view active"></section>
+<section id="today" class="view"></section>
+<section id="protocol" class="view"></section>
+<section id="school" class="view"></section>
+<section id="skills" class="view"></section>
+<section id="knowledge" class="view"></section>
+<section id="training" class="view"></section>
+<section id="reading" class="view"></section>
+<section id="goals" class="view"></section>
+<section id="analytics" class="view"></section>
+<section id="journal" class="view"></section>
+<section id="settings" class="view"></section>
+<section id="work" class="view"></section>
+</main>
+</div>
+
+<nav class="mobileNav" id="mobileNav"></nav>
+<div class="modalBack" id="modalBack" onclick="if(event.target===this)closeModal()"><div class="modal" id="modal"></div></div>
+<div class="palette" id="palette" onclick="if(event.target===this)closePalette()"><div class="paletteBox"><input id="palInput" placeholder="Type a command..." oninput="renderPalette()"><div id="palResults"></div></div></div>
+<div class="toastBox" id="toastBox"></div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   DISCIPLINE // OS
+   Everything is local. No libraries. No accounts. No server.
+   ========================================================= */
+
+const KEY="discipline_os_final_today_2026_10_07_v1";
+const DAY_MS=86400000;
+const START_DATE="2026-10-07"; // FINAL: all statistics/history begin on today, 7 October 2026
+const $=id=>document.getElementById(id);
+const clone=o=>JSON.parse(JSON.stringify(o));
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>{d=new Date(d);return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
+const today=()=>iso(new Date());
+const dateFromKey=k=>{const [y,m,d]=k.split("-").map(Number);return new Date(y,m-1,d)};
+const fmtDate=k=>dateFromKey(k).toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"});
+const fmtLong=k=>dateFromKey(k).toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+const yesterday=()=>iso(new Date(Date.now()-DAY_MS));
+const daysAgo=n=>iso(new Date(Date.now()-DAY_MS*n));
+const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const uid=()=>Math.random().toString(36).slice(2)+Date.now().toString(36);
+
+const QUOTES=[
+"Discipline is doing the useful thing after the motivation disappears.",
+"You do not need a perfect day. You need another honest one.",
+"Small actions become dangerous advantages when repeated for long enough.",
+"Your future is being built by ordinary decisions nobody else sees.",
+"Do the important thing before the easy thing.",
+"Consistency is not intensity. It is returning.",
+"Make your standards visible, then make them measurable.",
+"Do not negotiate with a task you already decided matters.",
+"Progress becomes obvious when you keep receipts.",
+"The goal is not to feel productive. The goal is to become capable.",
+"One focused hour can change the direction of a week.",
+"Your calendar is a better description of your priorities than your intentions.",
+"Build evidence that you can trust yourself.",
+"Learn it. Use it. Remember it. Repeat.",
+"Future you is not a different person. It is the result of today's systems."
+];
+
+const DEFAULT_TASKS=[
+["wake","Wake at 06:00","Morning","high","06:00"],
+["math","Morning deep thinking / maths","Morning","high","06:20"],
+["money","Learn one money concept","Morning","medium","07:00"],
+["recall","Active recall: yesterday","Morning","high","07:20"],
+["jog","Easy morning movement","Morning","low","07:45"],
+["school","Take school seriously","School","high","08:00"],
+["schoolRecall","Recall: morning + yesterday","School","medium","12:30"],
+["homework","Complete homework","Homework","high","17:00"],
+["revision","Revise lessons","Revision","high","18:00"],
+["future","Future skill session","Future skills","high","19:00"],
+["english","Learn one useful English word","Future skills","low","19:30"],
+["training","Evening training","Training","medium","20:00"],
+["reading","Read for future skills","Reading","medium","21:00"],
+["audit","Night audit + tomorrow plan","Night audit","high","22:15"],
+["sleep","Protect sleep","Night audit","high","23:00"]
+].map((x,i)=>({id:x[0],name:x[1],area:x[2],priority:x[3],time:x[4],order:i,active:true,created:today()}));
+
+const SKILLS=[
+["ai","AI / Artificial Intelligence","Build practical AI literacy and tool fluency."],
+["code","Coding","Build real software instead of only watching tutorials."],
+["biz","Business / Investing","Understand money, businesses, markets and decision-making."],
+["math","Mathematics / Reasoning","Strengthen problem solving, estimation and mathematical thinking."]
+];
+
+const DEFAULT_STATE={
+ version:1,
+ days:{},
+ tasks:clone(DEFAULT_TASKS),
+ knowledge:[],
+ training:[],
+ reading:[],
+ skillSessions:[],
+ skills:{ai:0,code:0,biz:0,math:0},
+ goals:[
+  {id:"g1",title:"Become genuinely strong at coding",category:"Future skill",target:100,progress:0,deadline:"",milestones:["HTML/CSS foundations","JavaScript fundamentals","DOM + APIs","Git/GitHub","Build 5 real projects","Build a portfolio"]},
+  {id:"g2",title:"Become financially literate before 18",category:"Money",target:100,progress:0,deadline:"",milestones:["Understand stocks","Understand ETFs","Understand risk","Read financial statements","Learn valuation basics","Build a paper portfolio"]},
+  {id:"g3",title:"Build exceptional mathematical reasoning",category:"School",target:100,progress:0,deadline:"",milestones:["Mental arithmetic","Algebra","Functions","Probability","Calculus foundations","Hard problem practice"]}
+ ],
+ school:{subjects:[]},
+ journal:[],
+ settings:{quotes:true,compact:false,motion:true,dailyTarget:100,wake:"06:00",sleep:"23:00",theme:"red",maxFreezes:3},
+ freezes:0,
+ freezeEvents:[],
+ lastQuoteDate:"",
+ quoteIndex:0,
+ timer:{running:false,remaining:1500,total:1500,skill:"code",startedAt:null,logged:0},
+ lastBackup:null
+};
+
+let state=loadState();
+let currentView="dashboard";
+let currentTaskFilter="all";
+let timerTick=null;
+let lastDate=today();
+let paletteItems=[];
+
+function loadState(){
+ try{
+  const raw=localStorage.getItem(KEY);
+  if(!raw)return clone(DEFAULT_STATE);
+  const s=JSON.parse(raw);
+  const out=Object.assign(clone(DEFAULT_STATE),s);
+  out.days=s.days||{};out.tasks=Array.isArray(s.tasks)?s.tasks:clone(DEFAULT_TASKS);
+  out.knowledge=s.knowledge||[];out.training=s.training||[];out.reading=s.reading||[];
+  out.skillSessions=s.skillSessions||[];out.skills=Object.assign(clone(DEFAULT_STATE.skills),s.skills||{});
+  out.goals=s.goals||clone(DEFAULT_STATE.goals);out.school=s.school||{subjects:[]};
+  out.journal=s.journal||[];out.settings=Object.assign(clone(DEFAULT_STATE.settings),s.settings||{});
+  out.freezes=Number(s.freezes||0);out.freezeEvents=s.freezeEvents||[];
+  out.timer=Object.assign(clone(DEFAULT_STATE.timer),s.timer||{});
+  /* Migration from the earlier version */
+  if(Array.isArray(s.customTasks)){
+   s.customTasks.forEach((t,i)=>{
+    const id=t.id||("custom_"+uid());
+    if(!out.tasks.some(x=>x.id===id))out.tasks.push({id,name:t.name||"Custom task",area:t.area||"Custom",priority:"medium",time:"",order:100+i,active:true,created:today()});
+   });
+  }
+  if(out.skills.skillMath!=null){out.skills.math=Number(out.skills.skillMath);delete out.skills.skillMath}
+  for(const [k,d] of Object.entries(out.days)){
+   if(!d.taskIds){
+    d.taskIds=Object.keys(d.checks||{}).map(x=>{
+      const n=Number(x); return DEFAULT_TASKS[n]?.id || out.tasks[n]?.id;
+    }).filter(Boolean);
+    if(!d.taskIds.length)d.taskIds=out.tasks.filter(t=>t.active).map(t=>t.id);
+    const old=d.checks||{};const nc={};
+    Object.keys(old).forEach(x=>{
+      const n=Number(x),id=DEFAULT_TASKS[n]?.id||out.tasks[n]?.id;
+      if(id)nc[id]=!!old[x];
+    });d.checks=nc;
+   }
+  }
+  return out;
+ }catch(e){return clone(DEFAULT_STATE)}
+}
+
+function save(){
+ localStorage.setItem(KEY,JSON.stringify(state));
+}
+function ensureDay(k=today()){
+ if(!state.days[k]){
+  state.days[k]={date:k,checks:{},taskIds:state.tasks.filter(t=>t.active).sort((a,b)=>a.order-b.order).map(t=>t.id),focus:0,workout:0,reading:0,sleep:null,note:"",freezeUsed:false,freezeAwarded:false};
+ }else if(k===today()){
+  /* New tasks added today become part of today's denominator. */
+  const active=state.tasks.filter(t=>t.active).map(t=>t.id);
+  state.days[k].taskIds=[...new Set([...(state.days[k].taskIds||[]),...active])];
+ }
+ return state.days[k];
+}
+function taskById(id){return state.tasks.find(t=>t.id===id)}
+function tasksForDay(k=today()){
+ const d=ensureDay(k);
+ return (d.taskIds||[]).map(taskById).filter(Boolean).sort((a,b)=>a.order-b.order);
+}
+function activeTasks(){return state.tasks.filter(t=>t.active).sort((a,b)=>a.order-b.order)}
+function scoreOf(k=today()){
+ const d=state.days[k]; if(!d)return 0;
+ const ids=d.taskIds||[];
+ if(!ids.length)return 0;
+ const done=ids.reduce((n,id)=>n+(d.checks?.[id]?1:0),0);
+ return Math.round(done/ids.length*100);
+}
+function doneCount(k=today()){
+ const d=state.days[k];if(!d)return 0;
+ return (d.taskIds||[]).reduce((n,id)=>n+(d.checks?.[id]?1:0),0);
+}
+function dayHas100(k){return scoreOf(k)>=100}
+function streakBefore(k){
+ let n=0,cur=dateFromKey(k);
+ cur=new Date(cur.getTime()-DAY_MS);
+ while(n<1000){
+  const key=iso(cur),d=state.days[key];
+  if(!d||!dayHas100(key))break;
+  n++;cur=new Date(cur.getTime()-DAY_MS);
+ }
+ return n;
+}
+function processFreezeEligibility(){
+ const y=yesterday(),d=state.days[y];
+ if(!d||scoreOf(y)>=100||d.freezeUsed||d.freezeAwarded)return;
+ const before=streakBefore(y);
+ if(before>3){
+  if(state.freezes<state.settings.maxFreezes){
+   state.freezes++;
+   d.freezeAwarded=true;
+   state.freezeEvents.push({date:y,type:"earned",reason:"4+ day streak before missed day"});
+   save();
+   toast("Streak freeze earned. Your previous streak was strong enough.","good");
+  }else d.freezeAwarded=true;
+ }
+}
+function effective100(k){
+ const d=state.days[k];
+ return !!d&&(scoreOf(k)>=100||d.freezeUsed);
+}
+function currentStreak(){
+ let cur=dateFromKey(today()),n=0;
+ /* Today counts only if it is actually complete. An unfinished current day is "at risk", not an instant failure. */
+ if(dayHas100(today())){n=1;cur=new Date(cur.getTime()-DAY_MS)}
+ else cur=new Date(cur.getTime()-DAY_MS);
+ while(n<1000){
+  const key=iso(cur),d=state.days[key];
+  if(!d)break;
+  if(effective100(key)){n++;cur=new Date(cur.getTime()-DAY_MS)}
+  else break;
+ }
+ return n;
+}
+function weekKeys(){
+ const start=dateFromKey(START_DATE), now=dateFromKey(today());
+ const out=[]; let cur=new Date(start);
+ while(cur<=now){out.push(iso(cur));cur=new Date(cur.getTime()+DAY_MS)}
+ return out;
+}
+function avgFor(days){
+ if(!days.length)return 0;
+ return Math.round(days.reduce((s,k)=>s+scoreOf(k),0)/days.length);
+}
+function weeklyAverage(){return avgFor(weekKeys())}
+function lastNDays(n){
+ const start=dateFromKey(START_DATE), now=dateFromKey(today());
+ const wanted=[];
+ for(let i=n-1;i>=0;i--){
+  const d=new Date(now.getTime()-i*DAY_MS);
+  if(d>=start) wanted.push(iso(d));
+ }
+ return wanted;
+}
+function bestDay(n=30){
+ const a=lastNDays(n).map(k=>({k,s:scoreOf(k)}));return a.sort((x,y)=>y.s-x.s)[0];
+}
+function categoryStats(n=30){
+ const counts={};lastNDays(n).forEach(k=>{
+  const d=state.days[k];if(!d)return;
+  (d.taskIds||[]).forEach(id=>{
+   const t=taskById(id);if(!t)return;
+   if(!counts[t.area])counts[t.area]={done:0,total:0};
+   counts[t.area].total++;if(d.checks?.[id])counts[t.area].done++;
+  });
+ });
+ return Object.entries(counts).map(([area,x])=>({area,score:x.total?Math.round(x.done/x.total*100):0,done:x.done,total:x.total})).sort((a,b)=>b.score-a.score);
+}
+function mostSkipped(n=30){
+ const c={};lastNDays(n).forEach(k=>{
+  const d=state.days[k];if(!d)return;
+  (d.taskIds||[]).forEach(id=>{if(!d.checks?.[id])c[id]=(c[id]||0)+1});
+ });
+ return Object.entries(c).map(([id,n])=>({task:taskById(id)?.name||id,n})).sort((a,b)=>b.n-a.n).slice(0,8);
+}
+function skillTotal(id){return Number(state.skills[id]||0)}
+function skillWeek(id){return state.skillSessions.filter(x=>x.skill===id&&x.date>=daysAgo(6)).reduce((s,x)=>s+x.minutes,0)}
+function skillToday(id){return state.skillSessions.filter(x=>x.skill===id&&x.date===today()).reduce((s,x)=>s+x.minutes,0)}
+function totalFocus(n=30){return state.skillSessions.filter(x=>x.date>=daysAgo(n-1)).reduce((s,x)=>s+x.minutes,0)}
+function formatMin(m){m=Math.max(0,Math.round(m));return m<60?m+"m":Math.floor(m/60)+"h "+pad(m%60)+"m"}
+function timeString(sec){return pad(Math.floor(sec/3600))+":"+pad(Math.floor(sec%3600/60))+":"+pad(sec%60)}
+function showView(id){
+ document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));
+ document.querySelectorAll("#nav button,#mobileNav button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
+ const titles={dashboard:"Command Center",today:"Today",protocol:"Daily Protocol",school:"School",skills:"Future Skills",knowledge:"Knowledge Lab",training:"Training",reading:"Reading",goals:"Goals & Roadmap",analytics:"Analytics",journal:"Journal",settings:"Settings",work:"Work"};
+ $("pageTitle").textContent=titles[id]||"Command Center";
+ $("dateText").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+ currentView=id;closeSidebar();
+}
+function navigate(id){if(isBeforeStart()){updateStartLock();return;}showView(id);render()}
+function buildNav(){
+ const items=[
+  ["dashboard","01","Command Center"],["today","02","Today"],["protocol","03","Protocol"],["school","04","School"],
+  ["skills","05","Future Skills"],["knowledge","06","Knowledge"],["training","07","Training"],["reading","08","Reading"],
+  ["goals","09","Goals"],["analytics","10","Analytics"],["journal","11","Journal"],["settings","12","Settings"],["work","13","Work"]
+ ];
+ $("nav").innerHTML='<div class="navTitle">OPERATIONS</div>'+items.map(x=>`<button data-view="${x[0]}" onclick="navigate('${x[0]}')"><span class="num">${x[1]}</span>${x[2]}</button>`).join("");
+ $("mobileNav").innerHTML=items.slice(0,6).map(x=>`<button data-view="${x[0]}" onclick="navigate('${x[0]}')">${x[1]}<br>${x[2]}</button>`).join("");
+}
+function openSidebar(){$("sidebar").classList.add("open")}
+function closeSidebar(){$("sidebar").classList.remove("open")}
+function toast(msg,type=""){
+ const d=document.createElement("div");d.className="toast "+type;d.textContent=msg;$("toastBox").appendChild(d);setTimeout(()=>d.remove(),3200);
+}
+function openModal(html){$("modal").innerHTML=html;$("modalBack").classList.add("open")}
+function closeModal(){$("modalBack").classList.remove("open")}
+function confirmBox(message,yes){
+ openModal(`<div class="modalHead"><h2>Confirm</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div><p class="muted">${escapeHtml(message)}</p><div class="actions" style="justify-content:flex-end"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn danger" onclick="${yes}">Confirm</button></div>`);
+}
+
+/* ---------- Core task logic ---------- */
+function toggleTask(id){
+ const d=ensureDay();d.checks[id]=!d.checks[id];save();render();
+ toast(d.checks[id]?"Task completed.":"Task reopened.",d.checks[id]?"good":"");
+}
+function completeAll(){const d=ensureDay();tasksForDay().forEach(t=>d.checks[t.id]=true);save();render();toast("100% protocol completed. Strong work.","good")}
+function resetToday(){confirmBox("Reset every checkbox for today? Your historical days remain untouched.","doResetToday()")}
+function doResetToday(){const d=ensureDay();d.checks={};save();closeModal();render();toast("Today's checklist was reset.")}
+function useFreeze(k){
+ const d=state.days[k];if(!d||scoreOf(k)>=100||d.freezeUsed||state.freezes<=0)return;
+ state.freezes--;d.freezeUsed=true;state.freezeEvents.push({date:k,type:"used"});save();render();toast("Streak freeze used. That day now protects the streak.","good");
+}
+function taskModal(id=null){
+ const t=id?taskById(id):null;
+ openModal(`<div class="modalHead"><h2>${t?"Edit task":"New recurring task"}</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div>
+ <div class="form">
+ <div class="field"><label>Task name</label><input class="input" id="taskName" value="${escapeHtml(t?.name||"")}"></div>
+ <div class="formRow"><div class="field"><label>Area</label><input class="input" id="taskArea" value="${escapeHtml(t?.area||"Personal")}"></div><div class="field"><label>Time</label><input class="input" id="taskTime" type="time" value="${t?.time||""}"></div></div>
+ <div class="formRow"><div class="field"><label>Priority</label><select class="select" id="taskPriority"><option ${t?.priority==="low"?"selected":""}>low</option><option ${!t||t?.priority==="medium"?"selected":""}>medium</option><option ${t?.priority==="high"?"selected":""}>high</option></select></div><div class="field"><label>Target minutes (optional)</label><input class="input" id="taskMinutes" type="number" min="0" value="${t?.minutes||0}"></div></div>
+ <button class="btn primary" onclick="saveTask('${id||""}')">${t?"Save changes":"Add task"}</button></div>`);
+}
+function openTaskModal(){taskModal()}
+function saveTask(id){
+ const name=$("taskName").value.trim();if(!name){toast("Give the task a name.");return}
+ if(id){
+  const t=taskById(id);Object.assign(t,{name,area:$("taskArea").value.trim()||"Personal",time:$("taskTime").value,priority:$("taskPriority").value,minutes:Number($("taskMinutes").value||0)});
+ }else{
+  state.tasks.push({id:"t_"+uid(),name,area:$("taskArea").value.trim()||"Personal",time:$("taskTime").value,priority:$("taskPriority").value,minutes:Number($("taskMinutes").value||0),order:state.tasks.length,active:true,created:today()});
+ }
+ save();closeModal();render();toast(id?"Task updated.":"Task added to today's protocol.","good");
+}
+function archiveTask(id){
+ const t=taskById(id);if(!t)return;
+ confirmBox(`Archive "${t.name}"? It will disappear from future days but historical records stay intact.`,"doArchiveTask('"+id+"')");
+}
+function doArchiveTask(id){const t=taskById(id);t.active=false;const d=ensureDay();d.taskIds=(d.taskIds||[]).filter(x=>x!==id);save();closeModal();render();toast("Task archived. Historical data was preserved.","good")}
+
+/* ---------- Rendering ---------- */
+function render(){
+ if(isBeforeStart()){updateStartLock();return;}
+ processFreezeEligibility();ensureDay();applySettings();
+ $("sideScore").textContent=scoreOf()+"%";$("sideStreak").textContent=currentStreak();$("sideFreezes").textContent=state.freezes;
+ renderDashboard();renderToday();renderProtocol();renderSchool();renderSkills();renderKnowledge();renderTraining();renderReading();renderGoals();renderAnalytics();renderJournal();renderSettings();renderWork();
+ showView(currentView);
+}
+function renderDashboard(){
+ const s=scoreOf(),st=currentStreak(),wk=weeklyAverage(),d=ensureDay(),ts=tasksForDay();
+ const pct=s+"%";
+ const recent=lastNDays(14);
+ $("dashboard").innerHTML=`
+ <div class="card hero"><div class="eyebrow">PERSONAL COMMAND CENTER</div><h2>${s>=100?"Protocol complete. Now protect the standard.":s>=70?"You're moving. Finish the remaining work.":"Start with the next useful action."}</h2><p>${escapeHtml(QUOTES[state.quoteIndex%QUOTES.length])}</p><div class="actions"><button class="btn primary" onclick="completeAll()">Complete all</button><button class="btn" onclick="navigate('skills')">Start focus</button><button class="btn" onclick="newQuote()">New quote</button></div></div>
+ <div class="grid g4" style="margin-top:14px">
+  <div class="card stat"><div class="eyebrow">TODAY</div><div class="value">${s}%</div><div class="progress"><i style="width:${s}%"></i></div><div class="sub">${doneCount()}/${dayCounts(today()).eligible} eligible</div></div>
+  <div class="card stat"><div class="eyebrow">CURRENT STREAK</div><div class="value">${st} <span class="muted" style="font-size:13px">days</span></div><div class="sub">${dayHas100()? "Today is secured":"Today is still in progress"}</div></div>
+  <div class="card stat"><div class="eyebrow">WEEK AVG</div><div class="value">${wk}%</div><div class="sub">Since Oct 7</div></div>
+  <div class="card stat"><div class="eyebrow">FREEZES</div><div class="value freeze">${state.freezes}</div><div class="sub">earned after strong streaks</div></div>
+ </div>
+ <div class="grid g2" style="margin-top:14px">
+  <div class="card"><div class="sectionHead"><h2>Today's protocol</h2><button class="btn" onclick="navigate('today')">Open all</button></div>${renderTaskList(ts.slice(0,8),true)}</div>
+  <div class="card"><div class="sectionHead"><h2>14-day consistency</h2><span class="badge">${avgFor(recent)}% avg</span></div>${renderHeat(recent)}<div class="kpiRow" style="margin-top:15px"><div class="kpi"><strong>${totalFocus(14)>=60?formatMin(totalFocus(14)):totalFocus(14)+"m"}</strong><small>focus</small></div><div class="kpi"><strong>${formatMin(state.training.filter(x=>x.date>=daysAgo(13)).reduce((a,x)=>a+x.minutes,0))}</strong><small>training</small></div><div class="kpi"><strong>${formatMin(state.reading.filter(x=>x.date>=daysAgo(13)).reduce((a,x)=>a+x.minutes,0))}</strong><small>reading</small></div></div></div>
+ </div>
+ <div class="grid g3" style="margin-top:14px">
+  <div class="card"><div class="eyebrow">TOP PRIORITY</div><h3>${escapeHtml(topPriorityName())}</h3><p class="muted">Finish one important thing before chasing more.</p></div>
+  <div class="card"><div class="eyebrow">BEST RECENT DAY</div><h3>${bestDay().s}%</h3><p class="muted">${fmtDate(bestDay().k)}</p></div>
+  <div class="card"><div class="eyebrow">FOCUS — 30 DAYS</div><h3>${formatMin(totalFocus(30))}</h3><p class="muted">actual logged learning sessions</p></div>
+ </div>`;
+}
+function renderTaskList(list,compact=false){
+ if(!list.length)return `<div class="empty">No tasks here yet.</div>`;
+ const d=ensureDay();
+ return `<div class="taskList">${list.map(t=>`<div class="task ${d.checks[t.id]?"done":""}">
+ <input class="check" type="checkbox" ${d.checks[t.id]?"checked":""} onchange="toggleTask('${t.id}')">
+ <div class="taskMain"><div class="taskName">${escapeHtml(t.name)}</div><div class="taskMeta"><span>${escapeHtml(t.area)}</span>${t.time?`<span>• ${t.time}</span>`:""}<span class="priority ${t.priority}">${t.priority}</span></div></div>
+ ${compact?"":`<div class="taskBtns"><button class="btn" onclick="taskModal('${t.id}')">Edit</button><button class="btn danger" onclick="archiveTask('${t.id}')">Archive</button></div>`}
+ </div>`).join("")}</div>`;
+}
+function renderHeat(keys){
+ return `<div class="heat">${keys.map(k=>{const s=scoreOf(k);const l=s===0?"":s<25?"l1":s<50?"l2":s<75?"l3":s<100?"l4":"l5";return `<i class="${l}" title="${fmtDate(k)} — ${s}%"></i>`}).join("")}</div>`;
+}
+function renderToday(){
+ const ts=tasksForDay(),s=scoreOf(),d=ensureDay();
+ const areas=[...new Set(ts.map(t=>t.area))];
+ $("today").innerHTML=`<div class="card hero"><div class="todayHero"><div class="ring" style="--pct:${s}%"><div class="ringText"><strong>${s}%</strong><small>${doneCount()}/${dayCounts(today()).eligible}</small></div></div><div class="grow"><div class="eyebrow">TODAY • ${fmtLong(today())}</div><h2>${s===100?"Day secured.":s>=70?"Strong progress.":"Build the day one task at a time."}</h2>${statusSummaryHtml()}<div class="actions"><button class="btn primary" onclick="completeAll()">Complete all</button><button class="btn" onclick="resetToday()">Reset today's boxes</button><button class="btn" onclick="openTaskModal()">+ Add task</button><button class="btn primary" onclick="openOneOffModal()">+ One-day task</button></div></div></div></div>
+ <div class="sectionHead"><h2>Protocol</h2><div class="chips">${["all",...areas].map(a=>`<button class="chip ${currentTaskFilter===a?"active":""}" onclick="currentTaskFilter='${a}';renderToday()">${a}</button>`).join("")}</div></div>
+ <div class="card">${renderTaskList(currentTaskFilter==="all"?ts:ts.filter(t=>t.area===currentTaskFilter))}</div>
+ <div class="grid g2" style="margin-top:14px"><div class="card"><h3>Day reflection</h3><textarea class="textarea" id="dayNote" placeholder="What mattered today?">${escapeHtml(d.note||"")}</textarea><button class="btn primary" style="margin-top:8px" onclick="saveDayNote()">Save reflection</button></div><div class="card"><h3>Recovery</h3><div class="form"><div class="field"><label>Sleep last night (hours)</label><input class="input" id="sleepHours" type="number" min="0" max="16" step=".1" value="${d.sleep??""}"></div><button class="btn" onclick="saveSleep()">Save sleep</button></div><p class="muted">Protecting sleep is part of performance, not an obstacle to it.</p></div></div>`;
+}
+function saveDayNote(){ensureDay().note=$("dayNote").value;save();toast("Reflection saved.","good")}
+function saveSleep(){const v=Number($("sleepHours").value);ensureDay().sleep=Number.isFinite(v)?v:null;save();render();toast("Sleep record saved.","good")}
+function renderProtocol(){
+ const ts=activeTasks();
+ $("protocol").innerHTML=`<div class="card hero"><div class="eyebrow">TASK ENGINE</div><h2>Build a protocol that survives motivation.</h2><p>Create, edit and archive recurring tasks. Historical days keep their original task IDs, so your statistics stay accurate.</p><button class="btn primary" onclick="openTaskModal()">+ Create recurring task</button></div>
+ <div class="sectionHead"><h2>Active tasks</h2><span class="badge">${ts.length} active</span></div>
+ <div class="card">${renderTaskList(ts)}</div>
+ <div class="sectionHead"><h2>Archived tasks</h2></div>
+ <div class="card">${state.tasks.filter(t=>!t.active).length?state.tasks.filter(t=>!t.active).map(t=>`<div class="task"><div class="taskMain"><b>${escapeHtml(t.name)}</b><div class="taskMeta">${escapeHtml(t.area)}</div></div><button class="btn" onclick="restoreTask('${t.id}')">Restore</button></div>`).join(""):`<div class="empty">Nothing archived.</div>`}</div>`;
+}
+function restoreTask(id){const t=taskById(id);t.active=true;t.order=Math.max(0,...state.tasks.map(x=>x.order))+1;save();render();toast("Task restored for future days.","good")}
+function renderSchool(){
+ const subjects=state.school.subjects||[];
+ $("school").innerHTML=`<div class="card hero"><div class="eyebrow">SCHOOL COMMAND CENTER</div><h2>Turn school into a system.</h2><p>Track confidence, revision and weak areas without turning grades into your identity.</p><button class="btn primary" onclick="openSubjectModal()">+ Add subject</button></div>
+ <div class="grid g3" style="margin-top:14px">${subjects.map(s=>`<div class="card"><div class="eyebrow">${escapeHtml(s.name)}</div><div class="big">${s.confidence}%</div><div class="progress"><i style="width:${s.confidence}%"></i></div><p class="muted">${escapeHtml(s.weak||"No weak topic recorded.")}</p><button class="btn" onclick="openSubjectModal('${s.id}')">Edit</button></div>`).join("")||`<div class="card empty">Add your first subject. The app will then track confidence and weak areas.</div>`}</div>`;
+}
+function openSubjectModal(id=null){
+ const s=id?(state.school.subjects||[]).find(x=>x.id===id):null;
+ openModal(`<div class="modalHead"><h2>${s?"Edit subject":"Add subject"}</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div><div class="form">
+ <div class="field"><label>Subject</label><input class="input" id="subName" value="${escapeHtml(s?.name||"")}"></div>
+ <div class="field"><label>Confidence (0–100)</label><input class="input" id="subConf" type="number" min="0" max="100" value="${s?.confidence??50}"></div>
+ <div class="field"><label>Weakest topic</label><input class="input" id="subWeak" value="${escapeHtml(s?.weak||"")}"></div>
+ <button class="btn primary" onclick="saveSubject('${id||""}')">Save subject</button></div>`);
+}
+function saveSubject(id){
+ const name=$("subName").value.trim();if(!name)return;
+ state.school.subjects=state.school.subjects||[];
+ if(id){const s=state.school.subjects.find(x=>x.id===id);Object.assign(s,{name,confidence:Number($("subConf").value),weak:$("subWeak").value})}
+ else state.school.subjects.push({id:uid(),name,confidence:Number($("subConf").value),weak:$("subWeak").value});
+ save();closeModal();render();toast("Subject saved.","good");
+}
+
+/* ---------- Future skills ---------- */
+function addSkill(id,delta){
+ state.skills[id]=Math.max(0,(state.skills[id]||0)+delta);
+ if(delta>0){
+  state.skillSessions.push({id:uid(),date:today(),skill:id,minutes:delta,source:"quick"});
+  ensureDay().focus+=delta;
+ }
+ save();render();toast((delta>0?"+":"")+delta+" min added to "+SKILLS.find(s=>s[0]===id)[1]+".",delta>0?"good":"");
+}
+function selectTimerSkill(id){state.timer.skill=id;save();renderSkills()}
+function startTimer(){
+ if(state.timer.running)return;
+ state.timer.running=true;state.timer.startedAt=Date.now();save();startTimerLoop();toast("Focus session started.","good");
+}
+function pauseTimer(){
+ if(!state.timer.running)return;
+ state.timer.running=false;recordTimerDelta();save();toast("Timer paused. Logged time was preserved.","good");renderSkills();
+}
+function resetTimer(){
+ if(state.timer.running){state.timer.running=false;recordTimerDelta()}
+ state.timer.remaining=state.timer.total;state.timer.logged=0;state.timer.startedAt=null;save();renderSkills();toast("Timer reset.");
+}
+function recordTimerDelta(){
+ const elapsed=Math.max(0,Math.floor((state.timer.total-state.timer.remaining)));
+ const newPart=elapsed-(state.timer.logged||0);
+ if(newPart>=60){
+  const mins=Math.floor(newPart/60);const id=state.timer.skill;
+  state.skillSessions.push({id:uid(),date:today(),skill:id,minutes:mins,source:"timer"});
+  state.skills[id]=(state.skills[id]||0)+mins;ensureDay().focus+=mins;state.timer.logged=elapsed;
+ }else state.timer.logged=elapsed;
+}
+function startTimerLoop(){
+ clearInterval(timerTick);timerTick=setInterval(()=>{
+  if(!state.timer.running)return;
+  const elapsed=Math.floor((Date.now()-state.timer.startedAt)/1000);
+  const remaining=Math.max(0,state.timer.total-elapsed-(state.timer.loggedSeconds||0));
+  state.timer.remaining=remaining;
+  if(remaining<=0){
+   state.timer.running=false;recordTimerDelta();state.timer.remaining=state.timer.total;state.timer.logged=0;state.timer.startedAt=null;save();renderSkills();toast("Focus session complete. Time logged.","good");
+  }else{saveTimerQuiet();drawTimerOnly()}
+ },1000);
+}
+function saveTimerQuiet(){localStorage.setItem(KEY,JSON.stringify(state))}
+function drawTimerOnly(){const e=$("timerDisplay");if(e)e.textContent=timeString(state.timer.remaining)}
+function setTimer(min){
+ if(state.timer.running)return;
+ state.timer.total=min*60;state.timer.remaining=min*60;state.timer.logged=0;state.timer.loggedSeconds=0;save();renderSkills();
+}
+function renderSkills(){
+ const t=state.timer;
+ $("skills").innerHTML=`<div class="card hero"><div class="eyebrow">FUTURE SKILLS</div><h2>Build skills that compound.</h2><p>Every minute is logged locally. Use the tiny ±1 controls when your session was slightly different; larger controls are still there for speed.</p></div>
+ <div class="sectionHead"><h2>Skill ledger</h2><span class="badge">${formatMin(totalFocus(30))} focus in 30 days</span></div>
+ <div class="skillGrid">${SKILLS.map(s=>`<div class="skillCard"><h3>${s[1]}</h3><div class="muted">${s[2]}</div><div class="mins">${formatMin(skillTotal(s[0]))}</div><small class="muted">today ${formatMin(skillToday(s[0]))} • 7d ${formatMin(skillWeek(s[0]))}</small><div class="progress" style="margin-top:9px"><i style="width:${Math.min(100,skillTotal(s[0])/600*100)}%"></i></div>
+ <div class="miniBtns">
+ <button class="btn" onclick="addSkill('${s[0]}',-30)">−30</button><button class="btn" onclick="addSkill('${s[0]}',-15)">−15</button><button class="btn" onclick="addSkill('${s[0]}',-5)">−5</button><button class="btn" onclick="addSkill('${s[0]}',-1)">−1</button>
+ <button class="btn" onclick="addSkill('${s[0]}',1)">+1</button><button class="btn" onclick="addSkill('${s[0]}',5)">+5</button><button class="btn" onclick="addSkill('${s[0]}',15)">+15</button><button class="btn" onclick="addSkill('${s[0]}',30)">+30</button>
+ </div></div>`).join("")}</div>
+ <div class="grid g2" style="margin-top:14px">
+ <div class="card"><div class="sectionHead"><h2>Focus timer</h2><span class="badge">${SKILLS.find(x=>x[0]===t.skill)?.[1]||"Coding"}</span></div><div class="timer"><div class="timerTime" id="timerDisplay">${timeString(t.remaining)}</div><div class="timerBar"><div class="progress"><i style="width:${Math.max(0,100-(t.remaining/t.total*100))}%"></i></div></div><div class="chips">${SKILLS.map(s=>`<button class="chip ${t.skill===s[0]?"active":""}" onclick="selectTimerSkill('${s[0]}')">${s[1]}</button>`).join("")}</div><div class="actions"><button class="btn" onclick="setTimer(1)">1m</button><button class="btn" onclick="setTimer(5)">5m</button><button class="btn" onclick="setTimer(15)">15m</button><button class="btn" onclick="setTimer(25)">25m</button><button class="btn" onclick="setTimer(50)">50m</button><button class="btn" onclick="setTimer(90)">90m</button></div><div class="actions"><button class="btn primary" onclick="startTimer()">Start</button><button class="btn" onclick="pauseTimer()">Pause</button><button class="btn danger" onclick="resetTimer()">Reset</button></div></div></div>
+ <div class="card" style="grid-column:1/-1">${skillsChartHtml()}</div></div>`;
+}
+
+/* ---------- Knowledge ---------- */
+function addKnowledge(type){
+ const prompts={
+ money:["Money concept","Opportunity cost","Compound interest","Diversification","Risk vs return","Inflation","P/E ratio","Free cash flow","Moat","Index fund"],
+ math:["Math / reasoning","Estimate a percentage mentally","Solve a quadratic","Explain a derivative","Prove a simple identity","Find a faster mental calculation"],
+ english:["English word","coherent","nuanced","reluctant","inevitable","subtle","precise","resilient","conventional"]
+ };
+ const arr=prompts[type]||prompts.money;
+ const item=arr[1+Math.floor(Math.random()*(arr.length-1))];
+ openModal(`<div class="modalHead"><h2>Log knowledge</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div><div class="form"><div class="field"><label>Type</label><input class="input" id="knowType" value="${arr[0]}" readonly></div><div class="field"><label>Concept / word</label><input class="input" id="knowTitle" value="${escapeHtml(item)}"></div><div class="field"><label>What do you know?</label><textarea class="textarea" id="knowText" placeholder="Explain it in your own words."></textarea></div><button class="btn primary" onclick="saveKnowledge()">Save to recall queue</button></div>`);
+}
+function saveKnowledge(){
+ state.knowledge.push({id:uid(),date:today(),type:$("knowType").value,title:$("knowTitle").value.trim(),text:$("knowText").value.trim(),next:today(),reviews:0});
+ save();closeModal();render();toast("Knowledge saved for active recall.","good");
+}
+function reviewKnowledge(id){
+ const x=state.knowledge.find(k=>k.id===id);if(!x)return;
+ const intervals=[1,3,7,14,30,60];x.reviews++;x.next=iso(new Date(Date.now()+DAY_MS*(intervals[Math.min(x.reviews-1,intervals.length-1)])));save();render();toast("Reviewed. Next recall scheduled.","good");
+}
+function deleteKnowledge(id){state.knowledge=state.knowledge.filter(x=>x.id!==id);save();render();toast("Knowledge entry deleted.")}
+function renderKnowledge(){
+ const due=state.knowledge.filter(x=>x.next<=today()).length;
+ $("knowledge").innerHTML=`<div class="card hero"><div class="eyebrow">KNOWLEDGE LAB</div><h2>Don't just consume information. Retrieve it.</h2><p>${due} item${due===1?"":"s"} currently due for recall. Save concepts in your own words and revisit them on expanding intervals.</p><div class="actions"><button class="btn primary" onclick="addKnowledge('money')">+ Money concept</button><button class="btn" onclick="addKnowledge('math')">+ Maths</button><button class="btn" onclick="addKnowledge('english')">+ English</button></div></div>
+ <div class="sectionHead"><h2>Recall queue</h2><span class="badge">${due} due</span></div><div class="card">${state.knowledge.slice().sort((a,b)=>a.next.localeCompare(b.next)).map(x=>`<div class="note"><b>${escapeHtml(x.title)} <span class="badge">${escapeHtml(x.type)}</span></b><div>${escapeHtml(x.text||"No explanation yet.")}</div><div class="actions" style="margin-top:7px"><button class="btn good" onclick="reviewKnowledge('${x.id}')">I know it → schedule next</button><button class="btn danger" onclick="deleteKnowledge('${x.id}')">Delete</button></div><small class="muted">Next: ${fmtDate(x.next)} • reviews: ${x.reviews}</small></div>`).join("")||`<div class="empty">Your recall queue is empty.</div>`}</div>`;
+}
+
+/* ---------- Training / reading ---------- */
+function addTraining(){
+ openModal(`<div class="modalHead"><h2>Log training</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div><div class="form"><div class="formRow"><div class="field"><label>Minutes</label><input class="input" id="trMin" type="number" min="1" value="30"></div><div class="field"><label>Type</label><select class="select" id="trType"><option>Strength</option><option>Cardio</option><option>Mobility</option><option>Sport</option><option>Other</option></select></div></div><div class="field"><label>Notes</label><textarea class="textarea" id="trNote"></textarea></div><button class="btn primary" onclick="saveTraining()">Save</button></div>`);
+}
+function saveTraining(){const m=Math.max(1,Number($("trMin").value));state.training.push({id:uid(),date:today(),minutes:m,type:$("trType").value,note:$("trNote").value});ensureDay().workout+=m;save();closeModal();render();toast("Training logged.","good")}
+function renderTraining(){
+ const total=state.training.filter(x=>x.date>=daysAgo(6)).reduce((s,x)=>s+x.minutes,0);
+ $("training").innerHTML=`<div class="card hero"><div class="eyebrow">TRAINING</div><h2>Build strength without turning recovery into an afterthought.</h2><p>Log what you actually did. The system tracks volume and consistency, not perfection.</p><button class="btn primary" onclick="addTraining()">+ Log session</button></div>
+ <div class="grid g3" style="margin-top:14px"><div class="card stat"><div class="eyebrow">7-DAY TRAINING</div><div class="value">${formatMin(total)}</div></div><div class="card stat"><div class="eyebrow">SESSIONS</div><div class="value">${state.training.filter(x=>x.date>=daysAgo(6)).length}</div></div><div class="card stat"><div class="eyebrow">TODAY</div><div class="value">${formatMin(state.training.filter(x=>x.date===today()).reduce((s,x)=>s+x.minutes,0))}</div></div></div>
+ <div class="sectionHead"><h2>History</h2></div><div class="card">${state.training.slice().reverse().slice(0,20).map(x=>`<div class="note"><b>${x.type} — ${x.minutes}m</b><div class="muted">${fmtDate(x.date)}${x.note?" • "+escapeHtml(x.note):""}</div></div>`).join("")||`<div class="empty">No training logged.</div>`}</div>`;
+}
+function addReading(){
+ openModal(`<div class="modalHead"><h2>Log reading</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div><div class="form"><div class="field"><label>Book / resource</label><input class="input" id="rdBook"></div><div class="formRow"><div class="field"><label>Minutes</label><input class="input" id="rdMin" type="number" min="1" value="20"></div><div class="field"><label>Pages</label><input class="input" id="rdPages" type="number" min="0" value="0"></div></div><div class="field"><label>What did you learn?</label><textarea class="textarea" id="rdNote"></textarea></div><button class="btn primary" onclick="saveReading()">Save</button></div>`);
+}
+function saveReading(){const m=Math.max(1,Number($("rdMin").value));state.reading.push({id:uid(),date:today(),book:$("rdBook").value.trim()||"Untitled",minutes:m,pages:Number($("rdPages").value||0),note:$("rdNote").value});ensureDay().reading+=m;save();closeModal();render();toast("Reading logged.","good")}
+function renderReading(){
+ const week=state.reading.filter(x=>x.date>=daysAgo(6));
+ $("reading").innerHTML=`<div class="card hero"><div class="eyebrow">READING</div><h2>Read to become more capable, not just to finish books.</h2><p>Track minutes, pages and the ideas worth remembering.</p><button class="btn primary" onclick="addReading()">+ Log reading</button></div>
+ <div class="grid g3" style="margin-top:14px"><div class="card stat"><div class="eyebrow">7-DAY MINUTES</div><div class="value">${formatMin(week.reduce((s,x)=>s+x.minutes,0))}</div></div><div class="card stat"><div class="eyebrow">PAGES</div><div class="value">${week.reduce((s,x)=>s+x.pages,0)}</div></div><div class="card stat"><div class="eyebrow">SESSIONS</div><div class="value">${week.length}</div></div></div>
+ <div class="sectionHead"><h2>History</h2></div><div class="card">${state.reading.slice().reverse().slice(0,20).map(x=>`<div class="note"><b>${escapeHtml(x.book)} — ${x.minutes}m ${x.pages?`• ${x.pages} pages`:""}</b><div>${escapeHtml(x.note||"")}</div><small class="muted">${fmtDate(x.date)}</small></div>`).join("")||`<div class="empty">No reading logged.</div>`}</div>`;
+}
+
+/* ---------- Goals ---------- */
+function renderGoals(){
+ $("goals").innerHTML=`<div class="card hero"><div class="eyebrow">ROADMAP</div><h2>Build the person behind the checklist.</h2><p>Goals connect daily behavior to long-term capability. Update progress honestly; the system is not here to flatter you.</p><button class="btn primary" onclick="addGoal()">+ Goal</button></div>
+ <div class="grid g2" style="margin-top:14px">${state.goals.map(g=>`<div class="goal"><div class="goalTop"><div><div class="eyebrow">${escapeHtml(g.category)}</div><h3>${escapeHtml(g.title)}</h3></div><b>${g.progress}%</b></div><div class="progress" style="margin:12px 0"><i style="width:${g.progress}%"></i></div>${(g.milestones||[]).map((m,i)=>`<label class="milestone"><input type="checkbox" ${g.done?.[i]?"checked":""} onchange="toggleMilestone('${g.id}',${i},this.checked)"> ${escapeHtml(m)}</label>`).join("")}<div class="actions" style="margin-top:10px"><button class="btn" onclick="editGoal('${g.id}')">Edit progress</button><button class="btn danger" onclick="deleteGoal('${g.id}')">Delete</button></div></div>`).join("")}</div>`;
+}
+function toggleMilestone(id,i,v){const g=state.goals.find(x=>x.id===id);g.done=g.done||{};g.done[i]=v;const total=g.milestones?.length||1;g.progress=Math.round(Object.values(g.done).filter(Boolean).length/total*100);save();renderGoals();toast(v?"Milestone complete.":"Milestone reopened.")}
+function addGoal(){openModal(`<div class="modalHead"><h2>New goal</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div><div class="form"><div class="field"><label>Goal</label><input class="input" id="gTitle"></div><div class="field"><label>Category</label><input class="input" id="gCat" value="Personal"></div><div class="field"><label>Milestones, one per line</label><textarea class="textarea" id="gMilestones"></textarea></div><button class="btn primary" onclick="saveGoal()">Create</button></div>`)}
+function saveGoal(){state.goals.push({id:uid(),title:$("gTitle").value.trim(),category:$("gCat").value.trim()||"Personal",progress:0,milestones:$("gMilestones").value.split("\n").map(x=>x.trim()).filter(Boolean),done:{}});save();closeModal();render();toast("Goal created.","good")}
+function editGoal(id){const g=state.goals.find(x=>x.id===id);openModal(`<div class="modalHead"><h2>Edit goal</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div><div class="form"><div class="field"><label>Goal</label><input class="input" id="egTitle" value="${escapeHtml(g.title)}"></div><div class="field"><label>Progress</label><input class="input" id="egProg" type="number" min="0" max="100" value="${g.progress}"></div><button class="btn primary" onclick="saveGoalEdit('${id}')">Save</button></div>`)}
+function saveGoalEdit(id){const g=state.goals.find(x=>x.id===id);g.title=$("egTitle").value.trim();g.progress=Math.max(0,Math.min(100,Number($("egProg").value)));save();closeModal();render();toast("Goal updated.","good")}
+function deleteGoal(id){confirmBox("Delete this goal?","state.goals=state.goals.filter(x=>x.id!=='"+id+"');save();closeModal();render();toast('Goal deleted.')")}
+
+/* ---------- Analytics ---------- */
+function renderAnalytics(){
+ const cats=categoryStats(),skips=mostSkipped(),best=bestDay(),last30=lastNDays(30),avg30=avgFor(last30);
+ const sleep=last30.map(k=>state.days[k]?.sleep).filter(x=>typeof x==="number");
+ $("analytics").innerHTML=`<div class="card hero"><div class="eyebrow">ANALYTICS</div><h2>Your behavior, with receipts.</h2><p>Historical percentages use each day's own task snapshot. Missing elapsed days count as 0 in calendar averages, so the numbers cannot quietly lie.</p></div>
+ <div class="grid g4" style="margin-top:14px"><div class="card stat"><div class="eyebrow">7-DAY AVG</div><div class="value">${weeklyAverage()}%</div></div><div class="card stat"><div class="eyebrow">30-DAY AVG</div><div class="value">${avg30}%</div></div><div class="card stat"><div class="eyebrow">BEST DAY</div><div class="value">${best.s}%</div><div class="sub">${fmtDate(best.k)}</div></div><div class="card stat"><div class="eyebrow">LONGEST CURRENT</div><div class="value">${currentStreak()}</div><div class="sub">days</div></div></div>
+ <div class="grid g2" style="margin-top:14px"><div class="card"><h2>30-day heatmap</h2>${renderHeat(last30)}</div><div class="card"><h2>Recovery / sleep</h2><div class="big">${sleep.length?(sleep.reduce((a,b)=>a+b,0)/sleep.length).toFixed(1):"—"}h</div><p class="muted">average recorded sleep over available days</p></div></div>
+ <div class="grid g2" style="margin-top:14px"><div class="card"><h2>Category performance</h2>${cats.map(x=>`<div style="margin:11px 0"><div style="display:flex;justify-content:space-between"><b>${escapeHtml(x.area)}</b><span>${x.score}%</span></div><div class="progress"><i style="width:${x.score}%"></i></div></div>`).join("")||`<div class="empty">Not enough data yet.</div>`}</div>
+ <div class="card"><h2>Most skipped</h2>${skips.map(x=>`<div class="note"><b>${escapeHtml(x.task)}</b><span class="muted">${x.n} missed occurrence${x.n===1?"":"s"}</span></div>`).join("")||`<div class="empty">Nothing to analyze yet.</div>`}</div></div>
+ <div class="sectionHead"><h2>Daily ledger</h2></div><div class="card"><table class="table"><thead><tr><th>Date</th><th>Score</th><th>Tasks</th><th>Status</th><th>Action</th></tr></thead><tbody>${last30.slice().reverse().map(k=>{const d=state.days[k],s=scoreOf(k);return `<tr><td>${fmtDate(k)}</td><td><b>${s}%</b></td><td>${doneCount(k)}/${d?.taskIds?.length||0}</td><td>${d?.freezeUsed?'<span class="freeze">Freeze used</span>':s===100?'<span class="successText">Complete</span>':'<span class="dangerText">Incomplete</span>'}</td><td>${d&&s<100&&state.freezes>0&&!d.freezeUsed?`<button class="btn" onclick="useFreeze('${k}')">Use freeze</button>`:"—"}</td></tr>`}).join("")}</tbody></table></div>`;
+}
+
+/* ---------- Journal ---------- */
+function addJournal(){
+ openModal(`<div class="modalHead"><h2>Night audit</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div><div class="form"><div class="field"><label>Win</label><textarea class="textarea" id="jWin"></textarea></div><div class="field"><label>Problem</label><textarea class="textarea" id="jProblem"></textarea></div><div class="field"><label>Lesson</label><textarea class="textarea" id="jLesson"></textarea></div><div class="field"><label>Tomorrow's #1 priority</label><input class="input" id="jPriority"></div><button class="btn primary" onclick="saveJournal()">Save audit</button></div>`);
+}
+function saveJournal(){state.journal.push({id:uid(),date:today(),win:$("jWin").value,problem:$("jProblem").value,lesson:$("jLesson").value,priority:$("jPriority").value});save();closeModal();render();toast("Night audit saved.","good")}
+function renderJournal(){
+ $("journal").innerHTML=`<div class="card hero"><div class="eyebrow">JOURNAL / NIGHT AUDIT</div><h2>Make your mistakes useful.</h2><p>Short, honest reflection is enough. Over time this becomes a record of what actually helps you improve.</p><button class="btn primary" onclick="addJournal()">+ New audit</button></div><div class="sectionHead"><h2>History</h2></div><div class="card">${state.journal.slice().reverse().map(x=>`<div class="note"><b>${fmtDate(x.date)} — ${escapeHtml(x.priority||"No priority")}</b><div><strong>Win:</strong> ${escapeHtml(x.win||"—")}</div><div><strong>Problem:</strong> ${escapeHtml(x.problem||"—")}</div><div><strong>Lesson:</strong> ${escapeHtml(x.lesson||"—")}</div></div>`).join("")||`<div class="empty">No audits yet. One minute tonight can make tomorrow clearer.</div>`}</div>`;
+}
+
+/* ---------- Settings / backup ---------- */
+function renderSettings(){
+ const st=state.settings;
+ $("settings").innerHTML=`<div class="card hero"><div class="eyebrow">SYSTEM SETTINGS</div><h2>Make the system fit your life.</h2><p>Everything is stored in your browser. Export a backup before moving devices or clearing browser data.</p></div>
+ <div class="grid g2" style="margin-top:14px"><div class="card"><h2>Behavior</h2><div class="form">
+ <label class="milestone"><input type="checkbox" ${st.quotes?"checked":""} onchange="setSetting('quotes',this.checked)"> Show motivational quotes</label>
+ <label class="milestone"><input type="checkbox" ${st.compact?"checked":""} onchange="setSetting('compact',this.checked)"> Compact interface</label>
+ <label class="milestone"><input type="checkbox" ${st.motion?"checked":""} onchange="setSetting('motion',this.checked)"> Animations</label>
+ <div class="formRow"><div class="field"><label>Wake target</label><input class="input" type="time" value="${st.wake}" onchange="setSetting('wake',this.value)"></div><div class="field"><label>Sleep target</label><input class="input" type="time" value="${st.sleep}" onchange="setSetting('sleep',this.value)"></div></div>
+ <div class="field"><label>Maximum freeze credits</label><input class="input" type="number" min="1" max="10" value="${st.maxFreezes}" onchange="setSetting('maxFreezes',Number(this.value))"></div>
+ </div></div>
+ <div class="card"><h2>Backup</h2><p class="muted">Last backup: ${state.lastBackup?new Date(state.lastBackup).toLocaleString():"never"}</p><div class="actions"><button class="btn primary" onclick="exportData()">Export JSON</button><button class="btn" onclick="document.getElementById('importFile').click()">Import JSON</button><button class="btn" onclick="exportCSV()">Export CSV</button></div><input id="importFile" type="file" accept=".json" style="display:none" onchange="importData(event)"><hr style="border-color:var(--line);border-width:1px 0 0;margin:18px 0"><button class="btn danger" onclick="resetEverything()">Factory reset local data</button></div></div>`;
+}
+function setSetting(k,v){state.settings[k]=v;save();applySettings();render()}
+function applySettings(){document.body.classList.toggle("compact",!!state.settings.compact);document.body.classList.toggle("reduced",!state.settings.motion)}
+function exportData(){
+ state.lastBackup=new Date().toISOString();save();
+ const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="discipline-os-backup-"+today()+".json";a.click();URL.revokeObjectURL(a.href);toast("Backup exported.","good");
+}
+function exportCSV(){
+ const rows=[["date","score","done","tasks","focusMinutes","trainingMinutes","readingMinutes","sleepHours"]];
+ lastNDays(365).forEach(k=>{const d=state.days[k];rows.push([k,scoreOf(k),doneCount(k),d?.taskIds?.length||0,d?.focus||0,d?.workout||0,d?.reading||0,d?.sleep??""])});
+ const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+ const blob=new Blob([csv],{type:"text/csv"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="discipline-os-history.csv";a.click();URL.revokeObjectURL(a.href);toast("CSV exported.","good");
+}
+function importData(e){
+ const f=e.target.files[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{
+  try{const incoming=JSON.parse(reader.result);if(!incoming||typeof incoming!=="object"||!incoming.days||!incoming.tasks)throw Error();
+   state=Object.assign(clone(DEFAULT_STATE),incoming);save();render();toast("Backup imported.","good");
+  }catch(err){toast("That file does not look like a valid Discipline OS backup.","")}
+ };reader.readAsText(f);
+}
+function resetEverything(){confirmBox("This permanently clears local Discipline OS data in this browser. Export a backup first if you need it.","doFactoryReset()")}
+function doFactoryReset(){localStorage.removeItem(KEY);state=clone(DEFAULT_STATE);closeModal();render();toast("Local data reset.")}
+
+/* ---------- Quote / command palette ---------- */
+function newQuote(){state.quoteIndex=(state.quoteIndex+1)%QUOTES.length;save();renderDashboard();toast("New quote.")}
+function openPalette(){$("palette").classList.add("open");$("palInput").value="";renderPalette();setTimeout(()=>$("palInput").focus(),20)}
+function closePalette(){$("palette").classList.remove("open")}
+function renderPalette(){
+ const q=$("palInput").value.toLowerCase();
+ const items=[
+  ["Go to command center","dashboard"],["Go to Work","work"],["Go to today","today"],["Go to protocol","protocol"],["Go to school","school"],["Go to future skills","skills"],["Go to knowledge","knowledge"],["Go to training","training"],["Go to reading","reading"],["Go to goals","goals"],["Go to analytics","analytics"],["Go to journal","journal"],["Go to settings","settings"],
+  ["Add task","action:addTask"],["Complete all today's tasks","action:complete"],["Reset today's checklist","action:reset"],["Start 25-minute coding focus","action:focus"],["Log knowledge","action:knowledge"],["Log training","action:training"],["Log reading","action:reading"],["Night audit","action:journal"],["Export backup","action:export"],["New quote","action:quote"]
+ ];
+ paletteItems=items.filter(x=>x[0].toLowerCase().includes(q));
+ $("palResults").innerHTML=paletteItems.map((x,i)=>`<div class="palItem" onclick="runPalette(${i})"><span>${x[0]}</span><small>↵</small></div>`).join("")||`<div class="empty">No command found.</div>`;
+}
+function runPalette(i){const x=paletteItems[i];if(!x)return;closePalette();if(x[1].startsWith("action:")){const a=x[1].slice(7);({addTask:openTaskModal,complete:completeAll,reset:resetToday,focus:()=>{navigate("skills");setTimer(25)},knowledge:()=>addKnowledge("money"),training:addTraining,reading:addReading,journal:addJournal,export:exportData,quote:newQuote}[a])()}else navigate(x[1])}
+
+/* ---------- Midnight rollover ---------- */
+function tickClock(){
+ if(isBeforeStart())return;
+ const d=today();
+ if(d!==lastDate){
+  lastDate=d;processFreezeEligibility();ensureDay();save();render();toast("New day initialized. Today's checklist is fresh.","good");
+ }
+}
+document.addEventListener("keydown",e=>{
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openPalette()}
+ if(e.key==="Escape"){closeModal();closePalette()}
+ if(!e.ctrlKey&&!e.metaKey&&["INPUT","TEXTAREA","SELECT"].indexOf(document.activeElement?.tagName)<0){
+  const map={"1":"dashboard","2":"today","3":"protocol","4":"school","5":"skills","6":"knowledge","7":"training","8":"reading","9":"goals"};
+  if(map[e.key])navigate(map[e.key]);
+  if(e.key.toLowerCase()==="n")openTaskModal();
+ }
+});
+
+function isBeforeStart(){return today()<START_DATE;}
+function updateStartLock(){
+ const lock=$("startLock");
+ if(!lock)return;
+ const locked=isBeforeStart();
+ lock.style.display=locked?"grid":"none";
+ if(locked){
+  const target=dateFromKey(START_DATE);
+  const now=new Date();
+  const diff=Math.max(0,target-now);
+  const total=Math.floor(diff/1000);
+  const days=Math.floor(total/86400);
+  const hours=Math.floor((total%86400)/3600);
+  const mins=Math.floor((total%3600)/60);
+  const secs=total%60;
+  $("startLockTime").textContent=`Unlocks in ${days}d ${pad(hours)}h ${pad(mins)}m ${pad(secs)}s`;
+ }
+ return locked;
+}
+
+function guardedRender(){
+ updateStartLock();
+ if(isBeforeStart())return;
+ render();
+}
+
+/* =========================================================
+   WORK — DAILY LEARNING ENGINE
+   Additive module: does not replace existing app logic.
+   Content is selected from the local date, so no API/server is needed.
+   ========================================================= */
+const WORK_MATH=[
+ {q:"A number is chosen at random from 1 to 100. Without calculating every case, explain why the probability that it is divisible by 2 or 3 is 2/3 minus the probability that it is divisible by 6.",a:"Use inclusion-exclusion: P(2 or 3)=P(2)+P(3)-P(6). The subtraction removes numbers counted twice. The key lesson is to look for overlap before adding probabilities."},
+ {q:"You have 12 identical-looking coins and one is heavier. You may use a balance scale exactly three times. What strategy guarantees finding it?",a:"Split into groups of 4, weigh 4 vs 4, then use the remaining group if balanced; otherwise the heavier group contains it. Reduce 4 to 2 to 1 with the next two weighings."},
+ {q:"Find the next term: 2, 6, 12, 20, 30, ?. Then give a second rule that could produce the same first six terms.",a:"A natural rule is n(n+1): 2, 6, 12, 20, 30, 42. But finite sequences are never uniquely determined; another polynomial or constructed rule can match the same terms. The deeper lesson is that patterns need assumptions."},
+ {q:"A product falls 20% in price and later rises 20%. Is it back at its original price? Explain without using a calculator.",a:"No. Multipliers are 0.8 then 1.2, giving 0.96 of the original. The price ends 4% lower. Percentage changes act multiplicatively, not by simply adding percentages."},
+ {q:"You know that x+y=10 and xy=21. Without solving for x and y separately, find x²+y².",a:"Use (x+y)²=x²+2xy+y². Therefore x²+y²=100−42=58. The useful habit is to search for an identity that matches the information you already have."},
+ {q:"A clock gains 5 minutes every hour. It is correct at noon. What will it display when 12 real hours have passed?",a:"It gains 60 minutes over 12 real hours, so it displays 1:00 AM even though the real time is midnight. This is a rate problem: error accumulates linearly when the gain rate is constant."},
+ {q:"There are 100 lockers. On pass 1 you toggle every locker; pass 2 every second locker; pass 3 every third locker, and so on. Which lockers remain open?",a:"Only perfect-square-numbered lockers. A locker is toggled once for each divisor, and only perfect squares have an odd number of divisors. So 1, 4, 9, ..., 100 remain open."},
+ {q:"Can a triangle have sides 2, 3 and 6? Give the fastest test.",a:"No. The two smaller sides must add to more than the largest: 2+3=5<6. The triangle inequality is a powerful instant filter."},
+ {q:"If 1/7 is about 0.142857, estimate 5/14 mentally without doing long division.",a:"5/14 is half of 5/7. Since 1/7≈0.142857, 5/7≈0.714285, and half is ≈0.3571425. The recurring pattern also gives a useful mental anchor."},
+ {q:"A rectangle has fixed perimeter 40. Which shape gives the largest area: 1×19, 5×15, 8×12, or 10×10? Why does this happen?",a:"10×10 gives area 100, the largest. For a fixed perimeter, a rectangle's area increases as its sides become more equal; the square is optimal."},
+ {q:"You flip a fair coin three times. Is HHT more likely than HHH? Explain.",a:"No. Every exact three-flip sequence has probability 1/8. Patterns can feel different, but the individual sequences are equally likely when the coin is fair and flips are independent."},
+ {q:"A train travels half a journey at 60 km/h and half at 120 km/h. Is its average speed 90 km/h?",a:"No. Because equal distances take different times, the slower speed gets more time. The average is the harmonic mean: 2/(1/60+1/120)=80 km/h."}
+];
+const WORK_MONEY=[
+ ["Compound interest","Compound interest means returns can themselves generate further returns. If money grows by a percentage and you leave the gains invested, each period starts from a larger base. Time therefore matters enormously: a small, consistent rate can become significant over many years.","Learn: principal, rate, compounding frequency, time. Never confuse a guaranteed return with an assumed return."],
+ ["Inflation","Inflation is a sustained rise in the general price level. If your money does not grow as quickly as prices, its purchasing power falls. A useful distinction is nominal versus real: nominal is the number printed on the account, while real considers what that number can actually buy.","Learn: purchasing power, nominal return, real return."],
+ ["Diversification","Diversification means spreading exposure across investments or risks instead of relying heavily on one outcome. It cannot remove all risk, but it can reduce the damage caused by a single company, sector, asset, or event performing badly.","Learn: concentration risk, correlation, asset allocation."],
+ ["Risk vs return","Higher potential returns generally come with greater uncertainty or risk. The important question is not simply 'what could I make?' but 'what could happen instead, how bad would it be, and can I tolerate it?' Risk should be measured before chasing upside.","Learn: volatility, downside, risk tolerance, expected return."],
+ ["ETFs","An exchange-traded fund, or ETF, is a fund whose shares trade on an exchange. Many ETFs hold a basket of assets and can provide diversification in one purchase. Different ETFs can have very different goals, fees, holdings and risks.","Learn: index tracking, expense ratio, holdings, tracking difference."],
+ ["Market capitalization","Market capitalization is broadly the market value of a company's outstanding shares: share price multiplied by shares outstanding. It is not the same thing as revenue, profit, cash in the bank, or the price of one share.","Learn: large-cap, mid-cap, small-cap and enterprise value."],
+ ["Opportunity cost","Opportunity cost is what you give up by choosing one option over another. Spending €50 has a cost beyond €50: you also give up whatever useful alternative that €50 could have supported. This idea is central to rational decision-making.","Learn: trade-offs, scarce resources, marginal benefit."],
+ ["Emergency savings","An emergency fund is money reserved for unexpected necessary expenses. Its purpose is stability and liquidity rather than maximizing investment returns. The right amount depends on a person's situation, expenses and income reliability.","Learn: liquidity, predictable expenses, financial buffer."],
+ ["Fees","A fee that looks tiny can matter when charged repeatedly over many years. Investment costs can include fund expenses, trading costs, spreads and account charges. Comparing costs is part of evaluating an investment rather than an afterthought.","Learn: expense ratio, bid-ask spread, transaction cost."],
+ ["Taxes and investing","Investment gains may be taxed differently depending on the country, account type, asset and transaction. Tax treatment can change the amount you actually keep. Always separate pre-tax returns from after-tax outcomes and learn the rules that apply to you when you are legally able to invest.","Learn: capital gains, dividends, tax wrappers, after-tax return."]
+];
+const WORK_SKILLS=[
+ ["Reading a French tax document",
+  "Learn how to navigate a French tax document: identify the taxpayer, tax year, taxable income, tax rate, deductions, tax already paid, remaining amount and important dates. Use an example document and label what each major section means. Do not try to guess legal conclusions from one document—learn what each field is actually telling you."],
+
+ ["Understanding a French payslip",
+  "Learn how to read a French payslip from top to bottom. Identify gross salary, social contributions, taxable net income, net salary before tax, income tax withholding and the amount actually paid. The goal is to understand where the money goes rather than just looking at the final number."],
+
+ ["Reading a bank statement",
+  "Learn how to read a bank statement: dates, transaction descriptions, debits, credits, balances, direct debits, transfers and recurring payments. Practice reconstructing what happened to an account over one month and spotting anything that deserves investigation."],
+
+ ["Understanding a contract",
+  "Learn how to read a contract without immediately getting lost in legal language. Identify the parties, obligations, duration, payment terms, cancellation conditions, penalties, exceptions and important definitions. Practice highlighting what you would want clarified before agreeing to anything."],
+
+ ["Understanding a rental agreement",
+  "Learn the basic structure of a French rental agreement: landlord and tenant, rent, charges, deposit, duration, notice and responsibilities. The goal is not to become a lawyer; it is to become capable of understanding what you are being asked to agree to."],
+
+ ["Cooking a real dish from scratch",
+  "Choose one dish you have never properly made before and learn the technique behind it. Try something substantial such as chicken or vegetable biryani. Learn what each ingredient does, how heat changes the food, how to build flavour and how to recover when something goes wrong."],
+
+ ["Reading people through observation",
+  "Learn observation rather than 'mind reading'. Pay attention to what a person actually says, their usual behaviour, changes from their baseline, context and the situation around them. Practice generating several possible explanations instead of deciding that one gesture proves what someone is thinking."],
+
+ ["Detecting manipulation",
+  "Learn to recognize common manipulation patterns such as false urgency, guilt pressure, artificial scarcity, emotional blackmail, selective information and moving the goalposts. Take a real-world example and identify the tactic, the desired reaction and what evidence would help you evaluate the situation."],
+
+ ["Analyzing an argument",
+  "Learn to separate a claim, evidence, assumption and conclusion. Take a strong opinion from an article or video and map out exactly how the person gets from their evidence to their conclusion. Then identify the weakest link."],
+
+ ["Spotting misleading statistics",
+  "Learn how percentages, averages, graphs and sample sizes can create misleading impressions. Practice checking the denominator, scale, sample size, comparison group and whether correlation is being presented as causation."],
+
+ ["Negotiation fundamentals",
+  "Learn how to negotiate without turning every conversation into a confrontation. Identify your objective, your minimum acceptable outcome, the other side's likely interests and possible trade-offs. Practice creating options where both sides gain something useful."],
+
+ ["Researching a topic properly",
+  "Learn how to investigate a question instead of simply searching for an answer. Start with a precise question, find primary or authoritative sources where possible, compare independent sources, record disagreements and distinguish established facts from reasonable interpretations."],
+
+ ["Basic first-aid knowledge",
+  "Learn the purpose of basic first-aid actions and how to recognize situations that require emergency services. Focus on staying calm, assessing the situation, protecting yourself and others, and knowing when professional help is needed. This is about understanding the principles, not replacing professional medical training."],
+
+ ["Basic car maintenance",
+  "Learn what the major basic car components do: engine oil, coolant, brakes, tyres, battery, lights and windscreen fluid. Learn which warning signs deserve attention and which tasks are safe for a beginner versus those that should be left to a qualified mechanic."],
+
+ ["Understanding household electricity",
+  "Learn the basic concepts behind household electricity: voltage, current, resistance, power, circuits and circuit breakers. Understand why electricity can be dangerous and learn to identify situations where you should stop and get qualified help rather than experimenting."],
+
+ ["Basic clothing repair",
+  "Learn three practical repairs: sewing on a button, repairing a small seam and fixing a simple loose thread. Understand why different stitches are useful and practice repairing an old piece of clothing instead of buying something new immediately."],
+
+ ["Navigation without relying completely on GPS",
+  "Learn how to orient yourself using landmarks, street layouts, cardinal directions, maps and route planning. Pick a familiar area and mentally predict your route before checking your phone. The goal is to build spatial awareness, not to reject technology."],
+
+ ["Photography fundamentals",
+  "Learn the relationship between exposure, shutter speed, aperture and ISO. Take several photos of the same subject while deliberately changing one variable at a time. Notice how technical choices change motion, brightness and depth of field."],
+
+ ["Public speaking",
+  "Learn how to explain an idea clearly to another person. Build a short explanation with a hook, one central idea, an example and a conclusion. Record yourself explaining something for sixty seconds and listen for filler words, unclear sentences and unnecessary detours."],
+
+ ["Memory techniques",
+  "Learn how memory improves when information is organized, connected and retrieved. Practice a simple memory palace or association technique with ten unrelated objects, then test yourself later without looking at the list."],
+
+ ["Mental estimation",
+  "Learn to estimate before calculating exactly. Practice rounding prices, percentages, distances, time and quantities. The goal is not perfect precision; it is developing an internal sense of whether an answer is plausible."],
+
+ ["Understanding businesses",
+  "Learn how a business actually makes money. Take a company you know and identify its customers, product, revenue sources, major costs, competitors, advantages and biggest risks. Then explain why someone would choose that company instead of an alternative."],
+
+ ["Reading financial charts",
+  "Learn to interpret basic financial charts without being fooled by dramatic movements. Understand axes, time periods, percentage changes, absolute changes, volatility and the difference between a chart showing price and one showing a company's underlying business performance."],
+
+ ["Digital privacy and security",
+  "Learn practical digital security: strong unique passwords, password managers, multi-factor authentication, phishing detection, software updates and permission management. Audit your own digital habits and identify one unnecessary risk you could remove."],
+
+ ["Decision-making under uncertainty",
+  "Learn to make decisions when you do not have complete information. List what you know, what you do not know, the possible outcomes, the consequences and the assumptions you are making. Practice separating a bad outcome from a bad decision."],
+
+ ["Understanding cognitive biases",
+  "Learn how mental shortcuts can distort judgement. Study confirmation bias, anchoring, availability bias and the sunk-cost fallacy. Take one everyday decision and deliberately look for evidence that challenges your first instinct."],
+
+ ["Reading body language cautiously",
+  "Learn the limits of non-verbal communication. Instead of assigning fixed meanings to individual gestures, consider clusters of behaviour, context, cultural differences and changes from someone's normal behaviour. Practice making observations without turning them into unsupported conclusions."],
+
+ ["Basic food science",
+  "Learn why cooking techniques work. Study browning, emulsification, caramelization, gluten development and temperature control. Pick one technique and deliberately change one variable while cooking to see what happens."],
+
+ ["Understanding how insurance works",
+  "Learn the basic structure of insurance: policyholder, premium, coverage, exclusions, deductible or excess, claim and payout. Compare two hypothetical policies and identify what each one actually protects against rather than choosing based only on price."],
+
+ ["Understanding interest rates",
+  "Learn how interest rates affect borrowing, saving and the wider economy. Understand the difference between a stated rate and the effective cost of borrowing, and why changing rates can affect mortgages, businesses and consumer spending."],
+
+ ["Learning to explain difficult things simply",
+  "Choose a complicated topic and explain it as if you were teaching it to someone who knows nothing about it. Remove unnecessary jargon, use one analogy and check whether every sentence actually helps the listener understand the idea."],
+
+ ["Information verification",
+  "Learn a repeatable process for checking surprising claims: identify the exact claim, find the original source, check the date, compare independent evidence and look for missing context. Practice on one claim that initially feels obviously true."],
+
+ ["Practical meal planning",
+  "Learn how to turn a few ingredients into several useful meals. Build a simple plan around nutrition, budget, shelf life, preparation time and leftovers. The objective is to reduce waste and make feeding yourself easier when life gets busy."]
+];
+const WORK_WORDS=[
+ ["deduction",
+  "an amount that is subtracted from something",
+  "The payslip listed several deductions before showing the final amount paid."],
+
+ ["contribution",
+  "an amount of money or effort given toward something",
+  "Social contributions can represent a significant part of the difference between gross and net salary."],
+
+ ["transaction",
+  "an action involving an exchange of money or something of value",
+  "I checked the bank statement to make sure every transaction was familiar."],
+
+ ["clause",
+  "a particular section or condition in a legal document",
+  "Before signing the contract, she carefully read the cancellation clause."],
+
+ ["liability",
+  "legal or financial responsibility for something",
+  "The contract explained who had liability if the equipment was damaged."],
+
+ ["simmer",
+  "to cook gently in liquid at a temperature just below boiling",
+  "The biryani mixture needed to simmer gently so the flavours could develop."],
+
+ ["baseline",
+  "a normal level or condition used for comparison",
+  "You understand changes in someone's behaviour better when you know their normal baseline."],
+
+ ["coercion",
+  "the use of pressure or threats to force someone to do something",
+  "A decision made under coercion is not the same as a freely chosen decision."],
+
+ ["premise",
+  "a statement or idea that forms the basis of an argument",
+  "The conclusion seemed convincing until we examined whether its main premise was actually true."],
+
+ ["denominator",
+  "the number below the line in a fraction, representing the total used for comparison",
+  "Always check the denominator before comparing two percentages."],
+
+ ["concession",
+  "something you agree to give up or allow during a negotiation",
+  "She offered a small concession in exchange for getting the main condition she wanted."],
+
+ ["corroborate",
+  "to confirm that something is true by providing additional evidence",
+  "The second independent source helped corroborate the original report."],
+
+ ["triage",
+  "the process of deciding how urgently different problems or cases need attention",
+  "In an emergency, triage helps determine which situation needs immediate attention."],
+
+ ["maintenance",
+  "work done to keep something functioning properly",
+  "Regular maintenance can prevent small car problems from becoming expensive ones."],
+
+ ["circuit",
+  "a complete path through which electrical current can flow",
+  "The circuit breaker interrupted the circuit when the system detected a problem."],
+
+ ["repair",
+  "to restore something damaged or broken to working condition",
+  "Learning a simple repair can sometimes save you from replacing the entire item."],
+
+ ["orientation",
+  "an understanding of your position or direction",
+  "The map helped me regain my orientation after taking the wrong street."],
+
+ ["exposure",
+  "the amount of light reaching a camera sensor or photographic material",
+  "Changing the exposure made the darker parts of the photograph much easier to see."],
+
+ ["articulate",
+  "to express an idea clearly and effectively",
+  "She could articulate the complicated idea in a way that everyone understood."],
+
+ ["retrieval",
+  "the act of bringing stored information back to mind",
+  "Active retrieval is one of the reasons answering questions can be more useful than rereading notes."],
+
+ ["estimate",
+  "a reasonable calculation or judgement made without exact information",
+  "I made an estimate before calculating the exact total."],
+
+ ["revenue",
+  "the money a business receives from its activities before subtracting costs",
+  "A company can have high revenue while still making little profit."],
+
+ ["volatility",
+  "the degree to which something changes or moves over time",
+  "High volatility means the value can move substantially in a relatively short period."],
+
+ ["phishing",
+  "a deceptive attempt to trick someone into revealing information or taking an unsafe action",
+  "The suspicious email looked convincing, but several details revealed that it was phishing."],
+
+ ["uncertainty",
+  "a lack of complete knowledge about what will happen or what is true",
+  "Good decisions can still be made under uncertainty if the assumptions are made explicit."],
+
+ ["anchoring",
+  "a bias where an initial piece of information influences later judgement",
+  "The first price you see can create an anchoring effect even when it is irrelevant."],
+
+ ["cluster",
+  "a group of things that occur close together or are considered together",
+  "One gesture means very little, but a cluster of consistent behaviours can provide more context."],
+
+ ["emulsion",
+  "a mixture of two liquids that normally do not mix easily",
+  "Mayonnaise is an example of an emulsion."],
+
+ ["premium",
+  "an amount paid regularly for insurance coverage",
+  "A cheaper insurance premium does not necessarily mean better overall coverage."],
+
+ ["principal",
+  "the original amount of money involved before interest is added or removed",
+  "Interest is calculated based partly on the principal amount."],
+
+ ["analogy",
+  "a comparison used to explain an unfamiliar idea through something more familiar",
+  "The teacher used an analogy to make the complicated concept easier to understand."],
+
+ ["verify",
+  "to check that something is accurate or true",
+  "Before sharing the claim, I wanted to verify it using the original source."],
+
+ ["allocate",
+  "to distribute something for a particular purpose",
+  "I decided to allocate part of my budget to groceries before spending money elsewhere."]
+];
+const WORK_READINGS=[
+ ["How systems beat motivation",["Motivation is useful, but it is unreliable as a permanent operating system. It rises and falls with sleep, stress, novelty, confidence and the events of the day. A system works differently: it turns an intention into a repeatable sequence that is easier to follow even when enthusiasm is low.","The simplest example is a fixed starting ritual. If you decide every morning what 'starting' means, you spend mental energy negotiating with yourself. If the first step is already defined, the decision has effectively been made before the difficult moment arrives. This is one reason checklists are so powerful: they move decisions out of the moment when attention is weakest.","Good systems also make progress visible. A completed box, a logged reading session or a solved problem gives immediate evidence that the process happened. The goal is not to worship a streak or a number; the number is useful because it gives feedback about whether the system is producing the behavior you intended.","Another important idea is friction. If a useful action requires ten separate steps, you will naturally do it less often than an action requiring two. Removing friction can be more effective than demanding more discipline. Put the book where you will see it. Keep the project open. Prepare the question before the session starts.","Systems should also contain recovery. Missing one day is information, not a permanent identity. A robust system asks what caused the miss and changes the environment when possible. The aim is not perfection on every single day; it is a process that repeatedly returns you to useful action.","The deeper lesson is that discipline is partly an engineering problem. You can improve it by designing triggers, reducing friction, measuring outcomes and reviewing failures. You are not merely trying to become a person who 'feels motivated'; you are building conditions in which the next useful action is easier to take."]],
+ ["Why compound growth is more than a money idea",["Compound growth describes a process in which the result of one period becomes part of the base for the next. Money is the famous example, but the same structure appears in skills, knowledge, reputation and even mistakes. Small changes can become large because later progress builds on earlier progress.","Suppose you learn one concept and then use it to understand the next concept. The second lesson is no longer starting from zero. Your existing knowledge becomes an input. Over months, a person who keeps building connected knowledge can move much faster through difficult material than someone who repeatedly starts from scratch.","Compounding also explains why consistency matters more than occasional heroic effort. A giant burst of work can produce a temporary jump, but if the process leaves you exhausted, the next sessions become harder. A sustainable rhythm keeps adding new layers without constantly destroying the base.","There is an important warning, though: compounding amplifies the direction of the process. Good habits can reinforce useful outcomes, but bad assumptions can also become deeply embedded. This is why review and correction matter. Growth without feedback is not automatically improvement.","In finance, compounding is affected by rate, time, contributions, withdrawals and fees. In learning, the equivalents include quality of practice, time, active recall, feedback and deliberate difficulty. The exact mathematics differs, but the underlying intuition is similar: today's result can become tomorrow's starting point.","When you think about your future, look for activities that leave something behind. A solved problem teaches a pattern. A finished project becomes a portfolio piece. A well-written note becomes a future reference. These are forms of progress that can continue producing value after the original hour has ended."]],
+ ["The hidden economics of your time",["Every hour has alternatives. If you spend an hour scrolling, that hour cannot simultaneously be spent learning a programming concept, sleeping, exercising, talking with someone or building a project. This does not mean every hour must be optimized; it means choices have opportunity costs.","Opportunity cost is especially useful when a decision feels free. A free app can still cost attention. A free event can cost travel time. A cheap purchase can cost money that could have been saved. Looking for the next-best alternative makes the real trade-off visible.","Time also has different qualities. One hour when you are focused may produce more useful work than several hours of fragmented attention. Context switching has a cost because the brain repeatedly has to reconstruct what it was doing. This is why grouping similar tasks can improve output without increasing total hours.","There is another side: rest has value. An hour of recovery is not automatically wasted time. Sleep, food, movement and social connection can support future performance. The goal is not to eliminate leisure; it is to spend time intentionally enough that you know which activities are serving which purpose.","A useful experiment is to track where a normal day actually goes. Do not judge the data immediately. First observe it. Then identify one block that consistently disappears without giving you much value and replace only that block. Small changes make the system easier to sustain.","The broader lesson is that time is a scarce resource with no refund mechanism. Money can sometimes be earned again; yesterday cannot. Learning to allocate attention is therefore a practical financial skill as much as a productivity skill."]],
+ ["How to think clearly when information is everywhere",["The internet gives you more information than any individual can realistically verify. The problem is therefore no longer simply finding information. It is deciding which information deserves belief, which deserves more investigation and which should remain uncertain.","Start with the claim itself. What exactly is being asserted? Vague claims are difficult to test because their meaning can shift. Rewrite a dramatic statement into a precise sentence with a measurable meaning whenever possible.","Then examine evidence. A confident person is not evidence. A screenshot is not automatically evidence. A citation is useful only if it actually supports the claim. Primary sources, original data and direct documentation can be more informative than repeated summaries, although they still need interpretation.","Next look for assumptions. Every argument has a bridge between evidence and conclusion. Ask what must be true for that bridge to work. Sometimes the hidden assumption is reasonable; sometimes it is the entire weakness of the argument.","Good critical thinking also allows uncertainty. Saying 'I don't know yet' is not intellectual failure. It is often more accurate than choosing a confident answer from weak evidence. You can assign confidence levels: certain, likely, plausible, unclear or unlikely.","Finally, update. If new evidence contradicts your previous belief, changing your mind is a feature of a good reasoning system. The goal is not to defend your first answer. The goal is to become less wrong over time."]],
+ ["Why learning by recall feels harder—and works better",["Rereading creates familiarity, which can feel like learning. Active recall creates a different experience: you have to reconstruct the information without seeing it. Because reconstruction is harder, it often feels less fluent, but that difficulty is useful.","Imagine reading a definition five times. On the page it looks obvious. Close the page and explain it from memory. Suddenly the gaps become visible. Those gaps tell you exactly what needs another attempt, which makes study more targeted.","Spacing adds another layer. If you recall something today and again after a delay, you repeatedly strengthen the route back to the information. The delay should be long enough to require retrieval but not so long that the concept becomes completely inaccessible.","Errors are valuable when they are corrected. A wrong answer followed by feedback can reveal a misconception that rereading might hide. The important sequence is attempt, check, correct and later retrieve again.","A practical recall session can be tiny. Ask yourself three questions about yesterday's lesson, answer without notes, check the answers, then write one sentence explaining the part you missed. Five focused minutes can be more informative than twenty minutes of passive highlighting.","The broader skill is learning how to learn. Once you can diagnose what you actually remember, you can spend less time on what is already automatic and more time on the parts that genuinely need work."]],
+ ["Why building projects teaches different things than watching tutorials",["Tutorials are excellent for seeing a concept demonstrated. Projects force you to decide what to do when the tutorial stops. That gap is where a large amount of practical learning happens.","When building something yourself, requirements are incomplete. You have to choose a structure, name things, debug errors and decide what matters most. Those decisions create a mental model that is difficult to obtain from passive viewing alone.","Projects also create useful failure. A button that does nothing, a layout that breaks on mobile or a calculation that gives the wrong result tells you which part of your model is incomplete. Debugging is not an interruption to learning; it is one of the main ways practical understanding grows.","The best beginner projects are small enough to finish. A finished small project gives you a complete loop: idea, implementation, failure, debugging, refinement and result. Ten unfinished ambitious projects often teach less about completion than one modest project taken all the way through.","You can make projects more educational by adding constraints. Build the same feature without a library. Recreate it from memory. Explain each function after you write it. Change one requirement and observe what breaks. Constraints turn familiar work into deliberate practice.","Over time, your project history becomes evidence of your skills. It also becomes a map of what you still do not understand. That combination—proof plus gaps—is far more useful than simply counting how many tutorials you watched."]],
+ ["The difference between being busy and making progress",["Busy describes activity; progress describes movement toward an outcome. You can answer messages for three hours and be extremely busy without moving an important project forward. You can also spend twenty focused minutes solving the exact problem that was blocking you and make substantial progress.","A useful test is to ask what changed. Did a difficult concept become clearer? Did a feature become functional? Did you produce a draft? Did you identify a mistake? If nothing meaningful changed, the activity may have been maintenance rather than progress.","This does not make maintenance useless. Cleaning files, checking messages and organizing notes can be necessary. The problem appears when maintenance expands until there is no time left for the work that creates new value.","Priorities help. Choose one high-value outcome before starting a session. Then define the smallest visible result that would count as progress. This reduces the temptation to substitute easy tasks for difficult ones.","Progress also requires feedback. A goal without a measurement can become vague. A project without tests can appear finished when it is not. A study plan without recall can create the illusion of knowledge. Feedback turns effort into information.","The practical lesson is simple: do not ask only 'How long did I work?' Ask 'What is different because I worked?' Hours matter, but changed reality is the stronger measure."]]
+];
+function workDayIndex(len,offset=0){const a=dateFromKey(START_DATE),b=new Date();b.setHours(0,0,0,0);return Math.max(0,Math.floor((b-a)/DAY_MS)+offset)%len}
+function workDateLabel(k=today()){return new Date(k+"T12:00:00").toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"})}
+function workRecallText(offset){
+ const k=daysAgo(1);if(!k||k<START_DATE)return "This is your first active day. Tomorrow this box will automatically contain the information from today's Work session.";
+ const mi=workDayIndex(WORK_MATH.length,-1),money=WORK_MONEY[workDayIndex(WORK_MONEY.length,-1)],skill=WORK_SKILLS[workDayIndex(WORK_SKILLS.length,-1)],word=WORK_WORDS[workDayIndex(WORK_WORDS.length,-1)],reading=WORK_READINGS[workDayIndex(WORK_READINGS.length,-1)];
+ if(offset==="morning")return `Money: ${money[0]} — explain the concept in your own words and give one consequence. Maths: ${WORK_MATH[mi].q} English: ${word[0]} — ${word[1]}. Try to recall all three without looking at yesterday's page.`;
+ return `Future skill: ${skill[0]} — ${skill[1]} Reading: ${reading[0]} — recall the central idea, one supporting point and one practical application. Then explain the skill and article in your own words.`;
+}
+function renderWork(){
+ const root=$("work"); if(!root)return;
+ const mi=workDayIndex(WORK_MATH.length), money=WORK_MONEY[workDayIndex(WORK_MONEY.length)], skill=WORK_SKILLS[workDayIndex(WORK_SKILLS.length)], word=WORK_WORDS[workDayIndex(WORK_WORDS.length)], reading=WORK_READINGS[workDayIndex(WORK_READINGS.length)];
+ const tomorrow=WORK_SKILLS[workDayIndex(WORK_SKILLS.length,1)];
+ root.innerHTML=`<div class="card hero"><div class="eyebrow">WORK // DAILY LEARNING</div><h2>One day. Six deliberate inputs.</h2><p>New content is selected automatically from the date. Work through the sections in order: think, understand, recall, build, speak, read.</p><div class="workMeta"><span>${workDateLabel()}</span><span>Daily content</span><span>Local only</span></div></div>
+ <div class="workGrid">
+  <article class="workCard"><div class="workLabel">01 · Deep Thinking / Maths</div><h2>Today's problem</h2><p>${escapeHtml(WORK_MATH[mi].q)}</p><div class="workAnswer"><strong>Check your reasoning</strong><p>${escapeHtml(WORK_MATH[mi].a)}</p></div><div class="workMeta"><span>Try before reading</span><span>Reasoning</span></div></article>
+  <article class="workCard"><div class="workLabel">02 · Money Concept</div><h2>${escapeHtml(money[0])}</h2><p>${escapeHtml(money[1])}</p><div class="workAnswer"><strong>Key terms</strong><p>${escapeHtml(money[2])}</p></div></article>
+  <article class="workCard wide"><div class="workLabel">03 · Active Recall</div><h2>Yesterday's information</h2><p>Close your notes. Say your answers out loud or write them down before checking anything.</p><div class="workRecall"><div class="workRecallBox"><strong>Yesterday · Morning</strong><p>${escapeHtml(workRecallText("morning"))}</p></div><div class="workRecallBox"><strong>Yesterday · Evening</strong><p>${escapeHtml(workRecallText("evening"))}</p></div></div></article>
+  <article class="workCard"><div class="workLabel">04 · Future Skill Session</div><h2>${escapeHtml(skill[0])}</h2><p>${escapeHtml(skill[1])}</p><div class="workChecklist"><div>Understand the concept.</div><div>Do the tiny practical task.</div><div>Explain what you learned without notes.</div></div></article>
+  <article class="workCard"><div class="workLabel">05 · Useful English Word</div><div class="workWord">${escapeHtml(word[0])}</div><p class="workDefinition">${escapeHtml(word[1])}</p><div class="workExample">“${escapeHtml(word[2])}”</div><div class="workMeta"><span>Say it</span><span>Write your own sentence</span></div></article>
+  <article class="workCard wide workReading"><div class="workLabel">06 · Read for Future Skills</div><h2>${escapeHtml(reading[0])}</h2>${reading[1].map((p,i)=>`<p>${escapeHtml(p)}</p>`).join("")}<div class="workAnswer"><strong>After reading</strong><p>Write three things you learned, one idea you disagree with or want to investigate, and one action you could apply this week.</p></div></article>
+ </div>`;
+}
+
+/* =========================================================
+   TASK STATUS SYSTEM (later declarations override the old simple checklist logic)
+   ========================================================= */
+const ST_ICON={done:"✓",missed:"✕",skipped:"⏭",impossible:"🚫",pending:"•"};
+function taskStatus(k,id){const d=state.days[k];if(!d)return "pending";const s=d.statuses&&d.statuses[id];if(s)return s;return d.checks&&d.checks[id]?"done":"pending"}
+function resolvedStatus(k,id){const s=taskStatus(k,id);return(s==="pending"&&k<today())?"missed":s}
+function setTaskStatus(id,status,k=today(),reason=""){
+ const d=ensureDay(k);d.statuses=d.statuses||{};d.impossibleReasons=d.impossibleReasons||{};
+ d.statuses[id]=status;d.checks[id]=status==="done";
+ if(status==="impossible")d.impossibleReasons[id]=reason;else delete d.impossibleReasons[id];
+ save();render();
+ toast({done:"Task completed.",missed:"Marked as missed.",skipped:"Skipped for today.",impossible:"Marked impossible.",pending:"Task reset to pending."}[status]||"Updated.",status==="done"?"good":"");
+}
+function toggleTask(id){setTaskStatus(id,taskStatus(today(),id)==="done"?"pending":"done")}
+function askImpossible(id){
+ openModal(`<div class="modalHead"><h2>Impossible</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div><div class="form"><div class="field"><label>Why was this impossible? (optional)</label><textarea class="textarea" id="impReason" placeholder="Optional reason"></textarea></div><button class="btn primary" onclick="confirmImpossible('${id}')">Mark impossible</button></div>`);
+}
+function confirmImpossible(id){const r=$("impReason").value.trim();closeModal();setTaskStatus(id,"impossible",today(),r)}
+function dayCounts(k=today(),pri){
+ const c={done:0,missed:0,skipped:0,impossible:0,pending:0,eligible:0},d=state.days[k];if(!d)return c;
+ (d.taskIds||[]).forEach(id=>{const t=taskById(id);if(pri&&(!t||t.priority!==pri))return;c[resolvedStatus(k,id)]++});
+c.eligible=c.done+c.missed+c.pending;return c;
+}
+function periodCounts(n,pri){const t={done:0,missed:0,skipped:0,impossible:0,pending:0,eligible:0};lastNDays(n).forEach(k=>{const c=dayCounts(k,pri);for(const x in t)t[x]+=c[x]});return t}
+function scoreOf(k=today()){const c=dayCounts(k);return c.eligible?Math.round(c.done/c.eligible*100):0}
+function doneCount(k=today()){return dayCounts(k).done}
+function dayHas100(k=today()){const c=dayCounts(k);return c.eligible>0&&c.done===c.eligible&&c.pending===0}
+function completeAll(){
+ const k=today(),d=ensureDay();d.statuses=d.statuses||{};
+ tasksForDay().forEach(t=>{const s=taskStatus(k,t.id);if(s==="pending"||s==="missed"){d.statuses[t.id]="done";d.checks[t.id]=true}});
+ save();render();toast("Protocol completed. Skipped and Impossible tasks were left alone.","good");
+}
+function doResetToday(){const d=ensureDay();d.checks={};d.statuses={};d.impossibleReasons={};save();closeModal();render();toast("Today's checklist was reset to Pending.")}
+function taskModal(id=null){
+ const t=id?taskById(id):null,p=t?.priority||"medium";
+ openModal(`<div class="modalHead"><h2>${t?"Edit task":"New recurring task"}</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div>
+ <div class="form"><div class="field"><label>Task name</label><input class="input" id="taskName" value="${escapeHtml(t?.name||"")}"></div>
+ <div class="formRow"><div class="field"><label>Area</label><input class="input" id="taskArea" value="${escapeHtml(t?.area||"Personal")}"></div><div class="field"><label>Time</label><input class="input" id="taskTime" type="time" value="${t?.time||""}"></div></div>
+ <div class="formRow"><div class="field"><label>Priority</label><select class="select" id="taskPriority">${[["low","Low"],["medium","Medium"],["high","High"],["must","Must Do"]].map(x=>`<option value="${x[0]}" ${p===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></div><div class="field"><label>Target minutes (optional)</label><input class="input" id="taskMinutes" type="number" min="0" value="${t?.minutes||0}"></div></div>
+ <button class="btn primary" onclick="saveTask('${id||""}')">${t?"Save changes":"Add task"}</button></div>`);
+}
+function renderTaskList(list,compact=false){
+ if(!list.length)return `<div class="empty">No tasks here yet.</div>`;
+ const k=today(),d=ensureDay();
+ return `<div class="taskList">${list.map(t=>{
+  const s=taskStatus(k,t.id),r=d.impossibleReasons?.[t.id];
+  return `<div class="task st-${s} ${s==="done"?"done":""}"><input class="check" type="checkbox" ${s==="done"?"checked":""} onchange="toggleTask('${t.id}')">
+  <div class="taskMain"><div class="taskName">${escapeHtml(t.name)}</div><div class="taskMeta"><span>${escapeHtml(t.area)}</span>${t.time?`<span>• ${t.time}</span>`:""}<span class="priority ${t.priority}">${t.priority==="must"?"Must Do":t.priority}</span><span class="stBadge st-${s}">${ST_ICON[s]} ${s}</span></div>${r?`<div class="reason">Reason: ${escapeHtml(r)}</div>`:""}</div>
+  <div class="taskBtns"><button class="btn qb" title="Done" onclick="setTaskStatus('${t.id}','done')">✓</button><button class="btn qb" title="Miss" onclick="setTaskStatus('${t.id}','missed')">✕</button><button class="btn qb" title="Skip for today" onclick="setTaskStatus('${t.id}','skipped')">⏭</button><button class="btn qb" title="Impossible" onclick="askImpossible('${t.id}')">🚫</button><button class="btn qb" title="Undo" onclick="setTaskStatus('${t.id}','pending')">↩</button>${compact?"":`<button class="btn" onclick="taskModal('${t.id}')">Edit</button><button class="btn danger" onclick="archiveTask('${t.id}')">Archive</button>`}</div></div>`}).join("")}</div>`;
+}
+function statusSummaryHtml(){
+ const c=dayCounts(today());
+ return `<div class="statusSummary">${[["done","✓ Done"],["missed","✕ Missed"],["skipped","⏭ Skipped"],["impossible","🚫 Impossible"],["pending","• Pending"]].map(x=>`<span class="stChip st-${x[0]}"><b>${c[x[0]]}</b> ${x[1]}</span>`).join("")}</div><p class="muted">${c.eligible} eligible • ${c.skipped+c.impossible} excluded</p><p class="muted">Skipped and Impossible are excluded from the score. Missed counts.</p>`;
+}
+function topPriorityName(){
+ const ts=tasksForDay().filter(t=>taskStatus(today(),t.id)==="pending");
+ for(const p of ["must","high","medium","low"]){const t=ts.find(x=>x.priority===p);if(t)return t.name}
+ return "All work is resolved.";
+}
+function categoryStats(n=30){
+ const c={};
+ lastNDays(n).forEach(k=>{const d=state.days[k];if(!d)return;(d.taskIds||[]).forEach(id=>{
+  const t=taskById(id);if(!t)return;const s=resolvedStatus(k,id);c[t.area]=c[t.area]||{done:0,total:0};
+  if(s==="done"){c[t.area].done++;c[t.area].total++}else if(s==="missed")c[t.area].total++;
+ })});
+ return Object.entries(c).filter(x=>x[1].total).map(([area,x])=>({area,score:Math.round(x.done/x.total*100),done:x.done,total:x.total})).sort((a,b)=>b.score-a.score);
+}
+function statusLeaderboard(status,n=8,days=30){
+ const c={};
+ lastNDays(days).forEach(k=>{const d=state.days[k];if(!d)return;(d.taskIds||[]).forEach(id=>{if(resolvedStatus(k,id)===status)c[id]=(c[id]||0)+1})});
+ return Object.entries(c).map(([id,x])=>{const t=taskById(id);return {task:(t?t.name:id)+(t&&!t.active?" (archived)":""),n:x}}).sort((a,b)=>b.n-a.n).slice(0,n);
+}
+function mostMissed(n=30){return statusLeaderboard("missed",8,n)}
+function mostSkipped(n=30){return statusLeaderboard("skipped",8,n)}
+function mostImpossible(n=30){return statusLeaderboard("impossible",8,n)}
+function mustStats(n=30){const M=periodCounts(n,"must");return {mustDone:M.done,mustMissed:M.missed,mustSkipped:M.skipped,mustImpossible:M.impossible,mustEligible:M.eligible,mustScore:M.eligible?Math.round(M.done/M.eligible*100):0}}
+function renderAnalytics(){
+ const cats=categoryStats(3650),best=bestDay(),last30=lastNDays(30),avg30=avgFor(last30),P=periodCounts(3650),M=mustStats(3650);
+ const sleep=last30.map(k=>state.days[k]?.sleep).filter(x=>typeof x==="number");
+ const lb=l=>l.map(x=>`<div class="note"><b>${escapeHtml(x.task)}</b><span class="muted">${x.n} time${x.n===1?"":"s"}</span></div>`).join("")||`<div class="empty">Nothing recorded yet.</div>`;
+ $("analytics").innerHTML=`<div class="card hero"><div class="eyebrow">ANALYTICS</div><h2>Your behavior, with receipts.</h2><p>Score = Done ÷ (Done + Missed). Skipped and Impossible are excluded. Unresolved tasks on past days count as Missed. Everything starts on 7 October 2026.</p></div>
+ <div class="grid g4" style="margin-top:14px"><div class="card stat"><div class="eyebrow">SINCE START AVG</div><div class="value">${weeklyAverage()}%</div></div><div class="card stat"><div class="eyebrow">30-DAY AVG</div><div class="value">${avg30}%</div></div><div class="card stat"><div class="eyebrow">BEST DAY</div><div class="value">${best?best.s:0}%</div><div class="sub">${best?fmtDate(best.k):"—"}</div></div><div class="card stat"><div class="eyebrow">CURRENT STREAK</div><div class="value">${currentStreak()}</div><div class="sub">days</div></div></div>
+ <div class="grid g4" style="margin-top:14px"><div class="card stat"><div class="eyebrow">DONE</div><div class="value good">${P.done}</div></div><div class="card stat"><div class="eyebrow">MISSED</div><div class="value bad">${P.missed}</div></div><div class="card stat"><div class="eyebrow">SKIPPED</div><div class="value" style="color:var(--blue)">${P.skipped}</div></div><div class="card stat"><div class="eyebrow">IMPOSSIBLE</div><div class="value warn">${P.impossible}</div></div></div>
+ <div class="grid g2" style="margin-top:14px"><div class="card"><h2>Must Do performance</h2><div class="big">${M.mustScore}%</div><div class="kpiRow" style="margin-top:10px"><div class="kpi"><strong>${M.mustDone}</strong><small>done</small></div><div class="kpi"><strong>${M.mustMissed}</strong><small>missed</small></div><div class="kpi"><strong>${M.mustSkipped}</strong><small>skipped</small></div><div class="kpi"><strong>${M.mustImpossible}</strong><small>impossible</small></div><div class="kpi"><strong>${M.mustEligible}</strong><small>eligible</small></div></div></div>
+ <div class="card"><h2>Recovery / sleep</h2><div class="big">${sleep.length?(sleep.reduce((a,b)=>a+b,0)/sleep.length).toFixed(1):"—"}h</div><p class="muted">average recorded sleep over available days</p></div></div>
+ <div class="card" style="margin-top:14px"><h2>30-day heatmap</h2>${renderHeat(last30)}</div>
+ <div class="grid g2" style="margin-top:14px"><div class="card"><h2>Category performance</h2>${cats.map(x=>`<div style="margin:11px 0"><div style="display:flex;justify-content:space-between"><b>${escapeHtml(x.area)}</b><span>${x.score}% <small class="muted">(${x.done}/${x.total})</small></span></div><div class="progress"><i style="width:${x.score}%"></i></div></div>`).join("")||`<div class="empty">Not enough data yet.</div>`}</div>
+ <div class="card"><h2>Most missed</h2>${lb(mostMissed())}</div></div>
+ <div class="grid g2" style="margin-top:14px"><div class="card"><h2>Most skipped</h2>${lb(mostSkipped())}</div><div class="card"><h2>Most impossible</h2>${lb(mostImpossible())}</div></div>
+ <div class="sectionHead"><h2>Daily ledger</h2></div><div class="card" style="overflow-x:auto"><table class="table"><thead><tr><th>Date</th><th>Score</th><th>Done / Eligible</th><th>Missed</th><th>Skipped</th><th>Impossible</th><th>Status</th><th>Action</th></tr></thead><tbody>${last30.slice().reverse().map(k=>{const d=state.days[k],s=scoreOf(k),c=dayCounts(k);return `<tr><td>${fmtDate(k)}</td><td><b>${s}%</b></td><td>${c.done}/${c.eligible}</td><td>${c.missed}</td><td>${c.skipped}</td><td>${c.impossible}</td><td>${d?.freezeUsed?'<span class="freeze">Freeze used</span>':dayHas100(k)?'<span class="successText">Complete</span>':(k===today()&&c.pending)?'<span class="muted">In progress</span>':'<span class="dangerText">Incomplete</span>'}</td><td>${d&&s<100&&state.freezes>0&&!d.freezeUsed?`<button class="btn" onclick="useFreeze('${k}')">Use freeze</button>`:"—"}</td></tr>`}).join("")}</tbody></table></div>`;
+}
+function exportCSV(){
+ const rows=[["date","score","done","tasks","focusMinutes","trainingMinutes","readingMinutes","sleepHours","eligible","missed","skipped","impossible","mustDone","mustEligible","mustMissed","mustSkipped","mustImpossible"]];
+ lastNDays(365).forEach(k=>{const d=state.days[k],c=dayCounts(k),m=dayCounts(k,"must");
+  rows.push([k,scoreOf(k),c.done,d?.taskIds?.length||0,d?.focus||0,d?.workout||0,d?.reading||0,d?.sleep??"",c.eligible,c.missed,c.skipped,c.impossible,m.done,m.eligible,m.missed,m.skipped,m.impossible])});
+ const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+ const blob=new Blob([csv],{type:"text/csv"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="discipline-os-history.csv";a.click();URL.revokeObjectURL(a.href);toast("CSV exported.","good");
+}
+function updateClock(){
+ const now=new Date(),t=$("timeText"),d=$("dateText");
+ if(t)t.textContent=now.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+ if(d)d.textContent=now.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+}
+updateClock();setInterval(updateClock,1000);    
+
+/* ---------- PERMANENT TASK DELETE ---------- */
+function deleteTask(id){
+ const t=taskById(id);if(!t)return;
+ confirmBox('Permanently delete "'+t.name+'"? This also removes it from every past day and from your statistics. It cannot be undone. (Archive keeps the history.)',"doDeleteTask('"+id+"')");
+}
+function doDeleteTask(id){
+ state.tasks=state.tasks.filter(t=>t.id!==id);
+ Object.values(state.days).forEach(d=>{
+  d.taskIds=(d.taskIds||[]).filter(x=>x!==id);
+  if(d.checks)delete d.checks[id];
+  if(d.statuses)delete d.statuses[id];
+  if(d.impossibleReasons)delete d.impossibleReasons[id];
+ });
+ save();closeModal();render();toast("Task permanently deleted.");
+}
+function renderProtocol(){
+ const ts=activeTasks(),arch=state.tasks.filter(t=>!t.active&&!t.once);
+ $("protocol").innerHTML=`<div class="card hero"><div class="eyebrow">TASK ENGINE</div><h2>Build a protocol that survives motivation.</h2><p>Create, edit and archive recurring tasks. Historical days keep their original task IDs, so your statistics stay accurate. To remove a task completely, archive it first, then delete it from the archived list.</p><button class="btn primary" onclick="openTaskModal()">+ Create recurring task</button></div>
+ <div class="sectionHead"><h2>Active tasks</h2><span class="badge">${ts.length} active</span></div>
+ <div class="card">${renderTaskList(ts)}</div>
+ <div class="sectionHead"><h2>Archived tasks</h2></div>
+ <div class="card">${arch.length?arch.map(t=>`<div class="task"><div class="taskMain"><b>${escapeHtml(t.name)}</b><div class="taskMeta">${escapeHtml(t.area)}</div></div><div class="taskBtns"><button class="btn" onclick="restoreTask('${t.id}')">Restore</button><button class="btn danger" onclick="deleteTask('${t.id}')">Delete</button></div></div>`).join(""):`<div class="empty">Nothing archived.</div>`}</div>`;
+}
+
+/* ---------- REASON POPUP FOR MISS / SKIP / IMPOSSIBLE ---------- */
+function askReason(id,status){
+ const t=taskById(id);
+ const title={missed:"Why did you miss this?",skipped:"Why are you skipping this?",impossible:"Why was this impossible?"}[status];
+ openModal(`<div class="modalHead"><h2>${title}</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div>
+ <p class="muted">${escapeHtml(t?t.name:"")}</p>
+ <div class="form"><div class="field"><label>Reason (optional)</label><textarea class="textarea" id="reasonText" placeholder="Write a short reason..."></textarea></div>
+ <button class="btn primary" onclick="confirmReason('${id}','${status}')">Confirm</button></div>`);
+ setTimeout(()=>{const e=$("reasonText");if(e)e.focus()},50);
+}
+function confirmReason(id,status){const r=$("reasonText").value.trim();closeModal();setTaskStatus(id,status,today(),r)}
+function askImpossible(id){askReason(id,"impossible")}
+function setTaskStatus(id,status,k=today(),reason=""){
+ const d=ensureDay(k);d.statuses=d.statuses||{};d.impossibleReasons=d.impossibleReasons||{};
+ d.statuses[id]=status;d.checks[id]=status==="done";
+ if(status==="missed"||status==="skipped"||status==="impossible")d.impossibleReasons[id]=reason;
+ else delete d.impossibleReasons[id];
+ save();render();
+ toast({done:"Task completed.",missed:"Marked as missed.",skipped:"Skipped for today.",impossible:"Marked impossible.",pending:"Task reset to pending."}[status]||"Updated.",status==="done"?"good":"");
+}
+function renderTaskList(list,compact=false){
+ if(!list.length)return `<div class="empty">No tasks here yet.</div>`;
+ const k=today(),d=ensureDay();
+ const LBL={missed:"Missed because",skipped:"Skipped because",impossible:"Impossible because"};
+ return `<div class="taskList">${list.map(t=>{
+  const s=taskStatus(k,t.id),r=d.impossibleReasons?.[t.id];
+  return `<div class="task st-${s} ${s==="done"?"done":""}"><input class="check" type="checkbox" ${s==="done"?"checked":""} onchange="toggleTask('${t.id}')">
+  <div class="taskMain"><div class="taskName">${escapeHtml(t.name)}</div><div class="taskMeta"><span>${escapeHtml(t.area)}</span>${t.time?`<span>• ${t.time}</span>`:""}<span class="priority ${t.priority}">${t.priority==="must"?"Must Do":t.priority}</span><span class="stBadge st-${s}">${ST_ICON[s]} ${s}</span></div>${r&&LBL[s]?`<div class="reason">${LBL[s]}: ${escapeHtml(r)}</div>`:""}</div>
+  <div class="taskBtns"><button class="btn qb" title="Done" onclick="setTaskStatus('${t.id}','done')">✓</button><button class="btn qb" title="Miss" onclick="askReason('${t.id}','missed')">✕</button><button class="btn qb" title="Skip for today" onclick="askReason('${t.id}','skipped')">⏭</button><button class="btn qb" title="Impossible" onclick="askReason('${t.id}','impossible')">🚫</button><button class="btn qb" title="Undo" onclick="setTaskStatus('${t.id}','pending')">↩</button>${compact?"":`<button class="btn" onclick="taskModal('${t.id}')">Edit</button><button class="btn danger" onclick="archiveTask('${t.id}')">Archive</button>`}</div></div>`}).join("")}</div>`;
+}
+
+/* ---------- WORK: previous days + summaries ---------- */
+let workBack={1:0,2:0,3:0,4:0,5:0,6:0};
+function workDayNum(){const a=dateFromKey(START_DATE),b=new Date();b.setHours(0,0,0,0);return Math.max(0,Math.floor((b-a)/DAY_MS))}
+function workKeyFor(back){const t=dateFromKey(today());t.setDate(t.getDate()-back);return iso(t)}
+function workPrev(n){if(workBack[n]<workDayNum()){workBack[n]++;renderWork()}}
+function workToday(n){workBack[n]=0;renderWork()}
+function saveWorkNote(field,val,k){state.workNotes=state.workNotes||{};state.workNotes[k]=state.workNotes[k]||{};state.workNotes[k][field]=val;save()}
+function workNavHtml(n){
+ const back=workBack[n],k=workKeyFor(back);
+ return `<div class="workNav"><button class="btn" title="Previous day" onclick="workPrev(${n})" ${back>=workDayNum()?"disabled":""}>&lt;</button><span class="workNavLabel">${back===0?"Today":fmtDate(k)}</span>${back>0?`<button class="btn" onclick="workToday(${n})">Today</button>`:""}</div>`;
+}
+function workNoteHtml(field,back){
+ const k=workKeyFor(back),v=(state.workNotes&&state.workNotes[k]&&state.workNotes[k][field])||"";
+ return `<div class="workNote"><label>Your summary — what did you understand?</label><textarea class="textarea" placeholder="Write it in your own words..." oninput="saveWorkNote('${field}',this.value,'${k}')">${escapeHtml(v)}</textarea></div>`;
+}
+function workRecallFor(back,part){
+ if(workDayNum()-back<1)return "This is your first active day. Tomorrow this box will automatically contain the information from today's Work session.";
+ const o=-back-1,mi=workDayIndex(WORK_MATH.length,o),money=WORK_MONEY[workDayIndex(WORK_MONEY.length,o)],skill=WORK_SKILLS[workDayIndex(WORK_SKILLS.length,o)],word=WORK_WORDS[workDayIndex(WORK_WORDS.length,o)],reading=WORK_READINGS[workDayIndex(WORK_READINGS.length,o)];
+ if(part==="morning")return `Money: ${money[0]} — explain the concept in your own words and give one consequence. Maths: ${WORK_MATH[mi].q} English: ${word[0]} — ${word[1]}. Try to recall all three without looking at the page.`;
+ return `Future skill: ${skill[0]} — ${skill[1]} Reading: ${reading[0]} — recall the central idea, one supporting point and one practical application. Then explain the skill and article in your own words.`;
+}
+function renderWork(){
+ const root=$("work");if(!root)return;
+ const B=workBack,
+  mi=workDayIndex(WORK_MATH.length,-B[1]),
+  money=WORK_MONEY[workDayIndex(WORK_MONEY.length,-B[2])],
+  skill=WORK_SKILLS[workDayIndex(WORK_SKILLS.length,-B[4])],
+  word=WORK_WORDS[workDayIndex(WORK_WORDS.length,-B[5])],
+  reading=WORK_READINGS[workDayIndex(WORK_READINGS.length,-B[6])];
+ root.innerHTML=`<div class="card hero"><div class="eyebrow">WORK // DAILY LEARNING</div><h2>One day. Six deliberate inputs.</h2><p>New content is selected automatically from the date. Work through the sections in order: think, understand, recall, build, speak, read. Use &lt; on any section to revisit what you learned before.</p><div class="workMeta"><span>${workDateLabel()}</span><span>Daily content</span><span>Local only</span></div></div>
+ <div class="workGrid">
+  <article class="workCard"><div class="workHead"><div class="workLabel">01 · Deep Thinking / Maths</div>${workNavHtml(1)}</div><h2>${B[1]?"Problem":"Today's problem"}</h2><p>${escapeHtml(WORK_MATH[mi].q)}</p><div class="workAnswer"><strong>Check your reasoning</strong><p>${escapeHtml(WORK_MATH[mi].a)}</p></div><div class="workMeta"><span>Try before reading</span><span>Reasoning</span></div></article>
+  <article class="workCard"><div class="workHead"><div class="workLabel">02 · Money Concept</div>${workNavHtml(2)}</div><h2>${escapeHtml(money[0])}</h2><p>${escapeHtml(money[1])}</p><div class="workAnswer"><strong>Key terms</strong><p>${escapeHtml(money[2])}</p></div>${workNoteHtml("money",B[2])}</article>
+  <article class="workCard wide"><div class="workHead"><div class="workLabel">03 · Active Recall</div>${workNavHtml(3)}</div><h2>${B[3]?"That day's recall":"Yesterday's information"}</h2><p>Close your notes. Say your answers out loud or write them down before checking anything.</p><div class="workRecall"><div class="workRecallBox"><strong>Previous day · Morning</strong><p>${escapeHtml(workRecallFor(B[3],"morning"))}</p></div><div class="workRecallBox"><strong>Previous day · Evening</strong><p>${escapeHtml(workRecallFor(B[3],"evening"))}</p></div></div></article>
+  <article class="workCard"><div class="workHead"><div class="workLabel">04 · Future Skill Session</div>${workNavHtml(4)}</div><h2>${escapeHtml(skill[0])}</h2><p>${escapeHtml(skill[1])}</p><div class="workChecklist"><div>Understand the concept.</div><div>Do the tiny practical task.</div><div>Explain what you learned without notes.</div></div>${workNoteHtml("skill",B[4])}</article>
+  <article class="workCard"><div class="workHead"><div class="workLabel">05 · Useful English Word</div>${workNavHtml(5)}</div><div class="workWord">${escapeHtml(word[0])}</div><p class="workDefinition">${escapeHtml(word[1])}</p><div class="workExample">“${escapeHtml(word[2])}”</div><div class="workMeta"><span>Say it</span><span>Write your own sentence</span></div></article>
+  <article class="workCard wide workReading"><div class="workHead"><div class="workLabel">06 · Read for Future Skills</div>${workNavHtml(6)}</div><h2>${escapeHtml(reading[0])}</h2>${reading[1].map(p=>`<p>${escapeHtml(p)}</p>`).join("")}<div class="workAnswer"><strong>After reading</strong><p>Write three things you learned, one idea you disagree with or want to investigate, and one action you could apply this week.</p></div>${workNoteHtml("reading",B[6])}</article>
+ </div>`;
+}
+
+/* ---------- FUTURE SKILLS: fix −x buttons + graph ---------- */
+function addSkill(id,delta){
+ const before=state.skills[id]||0,after=Math.max(0,before+delta),real=after-before;
+ if(real===0){toast("Already at 0 minutes.");return}
+ state.skills[id]=after;
+ state.skillSessions.push({id:uid(),date:today(),skill:id,minutes:real,source:real>0?"quick":"adjust"});
+ const d=ensureDay();d.focus=Math.max(0,(d.focus||0)+real);
+ save();render();
+ toast((real>0?"+":"")+real+" min "+(real>0?"added to ":"removed from ")+SKILLS.find(s=>s[0]===id)[1]+".",real>0?"good":"");
+}
+function totalFocus(n=30){return Math.max(0,state.skillSessions.filter(x=>x.date>=daysAgo(n-1)).reduce((s,x)=>s+x.minutes,0))}
+var skillsRange=14;
+function setSkillsRange(n){skillsRange=n;renderSkills()}
+function skillMinutesOn(id,k){return Math.max(0,state.skillSessions.filter(x=>x.skill===id&&x.date===k).reduce((s,x)=>s+x.minutes,0))}
+function skillsChartHtml(){
+ const days=lastNDays(skillsRange),colors=["#58a6ff","#39d98a","#f0b429","#e01838"];
+ const W=640,H=270,L=46,R=16,T=14,B=34,iw=W-L-R,ih=H-T-B;
+ const series=SKILLS.map((s,i)=>({name:s[1],color:colors[i],vals:days.map(k=>skillMinutesOn(s[0],k))}));
+ let max=Math.max(30,...series.flatMap(s=>s.vals));max=Math.ceil(max/30)*30;
+ const px=i=>days.length>1?L+iw*i/(days.length-1):L+iw/2;
+ const py=v=>T+ih-(v/max)*ih;
+ const grid=[0,.25,.5,.75,1].map(f=>{const v=Math.round(max*f),y=py(v);return `<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="#202630"/><text x="${L-6}" y="${y+4}" text-anchor="end" fill="#8d96a3" font-size="11">${v}m</text>`}).join("");
+ const step=Math.max(1,Math.ceil(days.length/8));
+ const xl=days.map((k,i)=>(i%step===0||i===days.length-1)?`<text x="${px(i)}" y="${H-12}" text-anchor="middle" fill="#8d96a3" font-size="11">${dateFromKey(k).getDate()}/${dateFromKey(k).getMonth()+1}</text>`:"").join("");
+ const lines=series.map(s=>{
+  const pts=s.vals.map((v,i)=>px(i)+","+py(v)).join(" ");
+  return (days.length>1?`<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`:"")+
+   s.vals.map((v,i)=>`<circle cx="${px(i)}" cy="${py(v)}" r="3.5" fill="${s.color}"><title>${escapeHtml(s.name)} — ${fmtDate(days[i])}: ${v}m</title></circle>`).join("");
+ }).join("");
+ const legend=series.map(s=>`<span class="chip"><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${s.color};margin-right:6px"></i>${escapeHtml(s.name)}</span>`).join("");
+ const ranges=[7,14,30].map(n=>`<button class="chip ${skillsRange===n?"active":""}" onclick="setSkillsRange(${n})">${n} days</button>`).join("");
+ return `<div class="sectionHead" style="margin-top:0"><h2>Skills over time</h2><div class="chips">${ranges}</div></div>
+ <div class="chips" style="margin-bottom:10px">${legend}</div>
+ <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${grid}${xl}${lines}</svg>
+ <p class="muted" style="margin:8px 0 0">Minutes logged per day for each skill. Hover a dot for details.</p>`;
+}
+
+/* ---------- ANALYTICS: leaderboards over all days ---------- */
+function mostMissed(n=3650){return statusLeaderboard("missed",8,n)}
+function mostSkipped(n=3650){return statusLeaderboard("skipped",8,n)}
+function mostImpossible(n=3650){return statusLeaderboard("impossible",8,n)}
+
+/* ---------- TRAINING: delete sessions ---------- */
+function deleteTraining(id){confirmBox("Delete this training session?","doDeleteTraining('"+id+"')")}
+function doDeleteTraining(id){
+ const x=state.training.find(t=>t.id===id);if(!x)return;
+ const d=state.days[x.date];if(d)d.workout=Math.max(0,(d.workout||0)-x.minutes);
+ state.training=state.training.filter(t=>t.id!==id);save();closeModal();render();toast("Training session deleted.");
+}
+function renderTraining(){
+ const total=state.training.filter(x=>x.date>=daysAgo(6)).reduce((s,x)=>s+x.minutes,0);
+ $("training").innerHTML=`<div class="card hero"><div class="eyebrow">TRAINING</div><h2>Build strength without turning recovery into an afterthought.</h2><p>Log what you actually did. The system tracks volume and consistency, not perfection.</p><button class="btn primary" onclick="addTraining()">+ Log session</button></div>
+ <div class="grid g3" style="margin-top:14px"><div class="card stat"><div class="eyebrow">7-DAY TRAINING</div><div class="value">${formatMin(total)}</div></div><div class="card stat"><div class="eyebrow">SESSIONS</div><div class="value">${state.training.filter(x=>x.date>=daysAgo(6)).length}</div></div><div class="card stat"><div class="eyebrow">TODAY</div><div class="value">${formatMin(state.training.filter(x=>x.date===today()).reduce((s,x)=>s+x.minutes,0))}</div></div></div>
+ <div class="sectionHead"><h2>History</h2></div><div class="card">${state.training.slice().reverse().slice(0,20).map(x=>`<div class="note"><b>${x.type} — ${x.minutes}m</b><div class="muted">${fmtDate(x.date)}${x.note?" • "+escapeHtml(x.note):""}</div><div class="actions" style="margin-top:7px"><button class="btn danger" onclick="deleteTraining('${x.id}')">Delete</button></div></div>`).join("")||`<div class="empty">No training logged.</div>`}</div>`;
+}
+
+/* ---------- READING: delete sessions ---------- */
+function deleteReading(id){confirmBox("Delete this reading entry?","doDeleteReading('"+id+"')")}
+function doDeleteReading(id){
+ const x=state.reading.find(t=>t.id===id);if(!x)return;
+ const d=state.days[x.date];if(d)d.reading=Math.max(0,(d.reading||0)-x.minutes);
+ state.reading=state.reading.filter(t=>t.id!==id);save();closeModal();render();toast("Reading entry deleted.");
+}
+function renderReading(){
+ const week=state.reading.filter(x=>x.date>=daysAgo(6));
+ $("reading").innerHTML=`<div class="card hero"><div class="eyebrow">READING</div><h2>Read to become more capable, not just to finish books.</h2><p>Track minutes, pages and the ideas worth remembering.</p><button class="btn primary" onclick="addReading()">+ Log reading</button></div>
+ <div class="grid g3" style="margin-top:14px"><div class="card stat"><div class="eyebrow">7-DAY MINUTES</div><div class="value">${formatMin(week.reduce((s,x)=>s+x.minutes,0))}</div></div><div class="card stat"><div class="eyebrow">PAGES</div><div class="value">${week.reduce((s,x)=>s+x.pages,0)}</div></div><div class="card stat"><div class="eyebrow">SESSIONS</div><div class="value">${week.length}</div></div></div>
+ <div class="sectionHead"><h2>History</h2></div><div class="card">${state.reading.slice().reverse().slice(0,20).map(x=>`<div class="note"><b>${escapeHtml(x.book)} — ${x.minutes}m ${x.pages?`• ${x.pages} pages`:""}</b><div>${escapeHtml(x.note||"")}</div><small class="muted">${fmtDate(x.date)}</small><div class="actions" style="margin-top:7px"><button class="btn danger" onclick="deleteReading('${x.id}')">Delete</button></div></div>`).join("")||`<div class="empty">No reading logged.</div>`}</div>`;
+}
+
+/* ---------- JOURNAL: delete audits + guided form ---------- */
+function deleteJournal(id){confirmBox("Delete this audit?","doDeleteJournal('"+id+"')")}
+function doDeleteJournal(id){state.journal=state.journal.filter(x=>x.id!==id);save();closeModal();render();toast("Audit deleted.")}
+function addJournal(){
+ openModal(`<div class="modalHead"><h2>Night audit</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div>
+ <p class="muted">Takes 2 minutes. One or two honest sentences per box is enough.</p>
+ <div class="form">
+ <div class="field"><label>Win — one thing you did well today, even something small</label><textarea class="textarea" id="jWin" placeholder="e.g. I finished my maths problem before school."></textarea></div>
+ <div class="field"><label>Problem — what went wrong or got in your way</label><textarea class="textarea" id="jProblem" placeholder="e.g. I scrolled my phone for 40 minutes instead of revising."></textarea></div>
+ <div class="field"><label>Lesson — what you will do differently next time</label><textarea class="textarea" id="jLesson" placeholder="e.g. Put my phone in another room while I revise."></textarea></div>
+ <div class="field"><label>Tomorrow's #1 priority — the single most important thing</label><input class="input" id="jPriority" placeholder="e.g. Finish the coding exercise before 19:30"></div>
+ <button class="btn primary" onclick="saveJournal()">Save audit</button></div>`);
+}
+function renderJournal(){
+ $("journal").innerHTML=`<div class="card hero"><div class="eyebrow">JOURNAL / NIGHT AUDIT</div><h2>Make your mistakes useful.</h2><p>Short, honest reflection is enough. Over time this becomes a record of what actually helps you improve.</p><button class="btn primary" onclick="addJournal()">+ New audit</button></div><div class="sectionHead"><h2>History</h2></div><div class="card">${state.journal.slice().reverse().map(x=>`<div class="note"><b>${fmtDate(x.date)} — ${escapeHtml(x.priority||"No priority")}</b><div><strong>Win:</strong> ${escapeHtml(x.win||"—")}</div><div><strong>Problem:</strong> ${escapeHtml(x.problem||"—")}</div><div><strong>Lesson:</strong> ${escapeHtml(x.lesson||"—")}</div><div class="actions" style="margin-top:7px"><button class="btn danger" onclick="deleteJournal('${x.id}')">Delete</button></div></div>`).join("")||`<div class="empty">No audits yet. One minute tonight can make tomorrow clearer.</div>`}</div>`;
+}
+
+/* ---------- ONE-DAY TASKS + CALENDAR + XP ---------- */
+(function(){if($("calStyle"))return;const s=document.createElement("style");s.id="calStyle";s.textContent=`
+.calHead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.calGrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.calDow{font-size:10px;color:#697382;text-align:center;letter-spacing:.1em;text-transform:uppercase}
+.calCell{min-height:72px;border:1px solid var(--line);border-radius:10px;padding:6px;background:#0c1015;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between}
+.calCell.empty{background:transparent;border-color:transparent;cursor:default}
+.calCell:hover:not(.empty){border-color:#414956}.calCell.isToday{border-color:var(--accent2)}.calCell.sel{background:rgba(179,0,27,.15);border-color:rgba(179,0,27,.6)}
+.calMarks{display:flex;gap:6px;flex-wrap:wrap;font-size:10px;color:var(--muted)}.calScore{color:var(--good)}
+@media(max-width:800px){.calCell{min-height:54px;padding:4px}}`;document.head.appendChild(s)})();
+if(!$("calendar")){const s=document.createElement("section");s.id="calendar";s.className="view";$("work").after(s)}
+if(!$("sideXP")){const ss=document.querySelector(".sideStats");if(ss)ss.insertAdjacentHTML("beforeend",'<div class="row"><small>Level</small><b id="sideXP">1</b></div>')}
+
+/* day records also receive one-day tasks that are due on that exact date */
+function ensureDay(k=today()){
+ if(!state.days[k]){
+  state.days[k]={date:k,checks:{},statuses:{},taskIds:state.tasks.filter(t=>t.active).sort((a,b)=>a.order-b.order).map(t=>t.id),focus:0,workout:0,reading:0,sleep:null,note:"",freezeUsed:false,freezeAwarded:false};
+ }else if(k===today()){
+  const active=state.tasks.filter(t=>t.active).map(t=>t.id);
+  state.days[k].taskIds=[...new Set([...(state.days[k].taskIds||[]),...active])];
+ }
+ const d=state.days[k];d.taskIds=d.taskIds||[];
+ state.tasks.forEach(t=>{if(t.once===k&&!d.taskIds.includes(t.id))d.taskIds.push(t.id)});
+ return d;
+}
+function archiveTask(id){
+ const t=taskById(id);if(!t)return;
+ if(t.once){confirmBox('Delete the one-day task "'+t.name+'"?',"doDeleteTask('"+id+"')");return}
+ confirmBox('Archive "'+t.name+'"? It will disappear from future days but historical records stay intact.',"doArchiveTask('"+id+"')");
+}
+function openOneOffModal(date){
+ const d=date&&date>=today()?date:today();
+ openModal(`<div class="modalHead"><h2>One-day task</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div>
+ <p class="muted">Only appears on the day you choose, then never again.</p>
+ <div class="form"><div class="field"><label>Task</label><input class="input" id="ooName" placeholder="e.g. Maths exercise 5, page 152"></div>
+ <div class="formRow"><div class="field"><label>Day it is due</label><input class="input" id="ooDate" type="date" min="${today()}" value="${d}"></div>
+ <div class="field"><label>Priority</label><select class="select" id="ooPri">${[["low","Low"],["medium","Medium"],["high","High"],["must","Must Do"]].map(x=>`<option value="${x[0]}" ${x[0]==="high"?"selected":""}>${x[1]}</option>`).join("")}</select></div></div>
+ <button class="btn primary" onclick="saveOneOff()">Add task</button></div>`);
+ setTimeout(()=>{const e=$("ooName");if(e)e.focus()},50);
+}
+function saveOneOff(){
+ const name=$("ooName").value.trim(),date=$("ooDate").value;
+ if(!name){toast("Give the task a name.");return}
+ if(!date||date<today()){toast("Pick today or a future day.");return}
+ state.tasks.push({id:"t_"+uid(),name,area:"One-day",priority:$("ooPri").value,time:"",order:1000+state.tasks.length,active:false,once:date,created:today()});
+ save();closeModal();render();toast(date===today()?"Added to today.":"Scheduled for "+fmtDate(date)+".","good");
+}
+function deleteOneOff(id){const t=taskById(id);if(t)confirmBox('Delete "'+t.name+'"?',"doDeleteTask('"+id+"')")}
+
+/* ---------- calendar ---------- */
+var calSel=today(),calY=new Date().getFullYear(),calM=new Date().getMonth();
+function calMove(n){calM+=n;if(calM<0){calM=11;calY--}if(calM>11){calM=0;calY++}renderCalendar()}
+function calSelect(k){calSel=k;renderCalendar()}
+function calToday(){const n=new Date();calY=n.getFullYear();calM=n.getMonth();calSel=today();renderCalendar()}
+function eventsOn(k){return(state.events||[]).filter(e=>e.date===k).sort((a,b)=>(a.time||"").localeCompare(b.time||""))}
+function oneOffsOn(k){return state.tasks.filter(t=>t.once===k)}
+function openEventModal(date){
+ openModal(`<div class="modalHead"><h2>New event</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div>
+ <div class="form"><div class="field"><label>Title</label><input class="input" id="evTitle" placeholder="e.g. Maths test, dentist, football match"></div>
+ <div class="formRow"><div class="field"><label>Date</label><input class="input" id="evDate" type="date" value="${date||today()}"></div><div class="field"><label>Time (optional)</label><input class="input" id="evTime" type="time"></div></div>
+ <div class="field"><label>Note (optional)</label><textarea class="textarea" id="evNote"></textarea></div>
+ <button class="btn primary" onclick="saveEvent()">Save event</button></div>`);
+ setTimeout(()=>{const e=$("evTitle");if(e)e.focus()},50);
+}
+function saveEvent(){
+ const title=$("evTitle").value.trim(),date=$("evDate").value;
+ if(!title||!date){toast("Add a title and a date.");return}
+ state.events=state.events||[];state.events.push({id:uid(),date,time:$("evTime").value,title,note:$("evNote").value.trim()});
+ const dt=dateFromKey(date);calY=dt.getFullYear();calM=dt.getMonth();calSel=date;
+ save();closeModal();render();toast("Event saved.","good");
+}
+function deleteEvent(id){state.events=(state.events||[]).filter(e=>e.id!==id);save();render();toast("Event deleted.")}
+function renderCalendar(){
+ const root=$("calendar");if(!root)return;
+ const first=new Date(calY,calM,1),off=(first.getDay()+6)%7,dim=new Date(calY,calM+1,0).getDate(),cells=[];
+ for(let i=0;i<off;i++)cells.push('<div class="calCell empty"></div>');
+ for(let n=1;n<=dim;n++){
+  const k=calY+"-"+pad(calM+1)+"-"+pad(n),ev=eventsOn(k).length,oo=oneOffsOn(k).length,past=k>=START_DATE&&k<=today()&&state.days[k];
+  cells.push(`<div class="calCell ${k===today()?"isToday":""} ${k===calSel?"sel":""}" onclick="calSelect('${k}')"><b>${n}</b><div class="calMarks">${past?`<span class="calScore">${scoreOf(k)}%</span>`:""}${oo?`<span title="One-day tasks">📌${oo}</span>`:""}${ev?`<span title="Events">●${ev}</span>`:""}</div></div>`);
+ }
+ const evs=eventsOn(calSel),oos=oneOffsOn(calSel);
+ root.innerHTML=`<div class="card"><div class="calHead"><h2 style="margin:0">${first.toLocaleDateString(undefined,{month:"long",year:"numeric"})}</h2><div class="actions"><button class="btn" onclick="calMove(-1)">&lt;</button><button class="btn" onclick="calToday()">Today</button><button class="btn" onclick="calMove(1)">&gt;</button></div></div>
+ <div class="calGrid">${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<div class="calDow">${d}</div>`).join("")}${cells.join("")}</div>
+ <p class="muted" style="margin:10px 0 0;font-size:12px">📌 one-day tasks • ● events • green % = that day's score</p></div>
+ <div class="card" style="margin-top:14px"><div class="sectionHead" style="margin-top:0"><h2>${fmtLong(calSel)}</h2>${state.days[calSel]&&calSel<=today()?`<span class="badge">Score ${scoreOf(calSel)}%</span>`:""}</div>
+ <div class="actions"><button class="btn primary" onclick="openEventModal('${calSel}')">+ Event</button><button class="btn" onclick="openOneOffModal('${calSel}')" ${calSel<today()?"disabled":""}>+ One-day task</button></div>
+ <h3 style="margin-top:16px">One-day tasks</h3>${oos.map(t=>`<div class="note"><b>${escapeHtml(t.name)} <span class="priority ${t.priority}">${t.priority==="must"?"Must Do":t.priority}</span></b><span class="muted">${calSel>today()?"scheduled":taskStatus(calSel,t.id)}</span><button class="btn danger" style="float:right" onclick="deleteOneOff('${t.id}')">Delete</button></div>`).join("")||`<div class="empty">None for this day.</div>`}
+ <h3 style="margin-top:16px">Events</h3>${evs.map(e=>`<div class="note"><b>${e.time?escapeHtml(e.time)+" — ":""}${escapeHtml(e.title)}</b>${e.note?`<div class="muted">${escapeHtml(e.note)}</div>`:""}<button class="btn danger" style="margin-top:6px" onclick="deleteEvent('${e.id}')">Delete</button></div>`).join("")||`<div class="empty">No events.</div>`}</div>`;
+}
+
+/* ---------- XP (derived from real data, so deleting or undoing never leaves phantom XP) ---------- */
+function dayXP(k){
+ const p={tasks:0,focus:0,training:0,reading:0,audit:0,perfect:0,missed:0},d=state.days[k],W={low:5,medium:10,high:15,must:25};
+ if(d)(d.taskIds||[]).forEach(id=>{const t=taskById(id);if(!t)return;const s=resolvedStatus(k,id);
+  if(s==="done")p.tasks+=W[t.priority]||10;else if(s==="missed")p.missed-=(t.priority==="must"?15:5)});
+ p.focus=Math.min(120,Math.max(0,state.skillSessions.filter(x=>x.date===k).reduce((s,x)=>s+x.minutes,0)));
+ p.training=Math.min(45,Math.floor(state.training.filter(x=>x.date===k).reduce((s,x)=>s+x.minutes,0)/2));
+ p.reading=Math.min(45,Math.floor(state.reading.filter(x=>x.date===k).reduce((s,x)=>s+x.minutes,0)/2));
+ p.audit=state.journal.some(x=>x.date===k)?20:0;
+ p.perfect=dayHas100(k)?50:0;
+ return p;
+}
+function totalXP(){return Math.max(0,weekKeys().reduce((s,k)=>s+Object.values(dayXP(k)).reduce((a,b)=>a+b,0),0))}
+function xpLevel(x){const lv=Math.floor(Math.sqrt(x/50))+1,base=50*(lv-1)**2,next=50*lv**2;return{lv,base,next,pct:Math.round((x-base)/(next-base)*100)}}
+function xpRank(lv){let r="Initiate";[[3,"Apprentice"],[5,"Operator"],[8,"Specialist"],[12,"Veteran"],[17,"Elite"],[25,"Master"]].forEach(x=>{if(lv>=x[0])r=x[1]});return r}
+function xpCardHtml(){
+ const x=totalXP(),L=xpLevel(x),p=dayXP(today()),t=Object.values(p).reduce((a,b)=>a+b,0);
+ const rows=[["Tasks",p.tasks],["Focus",p.focus],["Training",p.training],["Reading",p.reading],["Night audit",p.audit],["Perfect day",p.perfect],["Missed",p.missed]].filter(r=>r[1]!==0);
+ return `<div class="card" style="margin-top:14px"><div class="eyebrow">XP • LEVEL</div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap"><div class="big">Level ${L.lv} <span class="accent" style="font-size:16px">${xpRank(L.lv)}</span></div><b>${x} XP</b></div><div class="progress" style="margin:10px 0"><i style="width:${L.pct}%"></i></div><p class="muted" style="margin:0">${L.next-x} XP to level ${L.lv+1} • Today ${t>=0?"+":""}${t} XP</p>${rows.length?`<div class="chips" style="margin-top:10px">${rows.map(r=>`<span class="chip">${r[0]} ${r[1]>0?"+":""}${r[1]}</span>`).join("")}</div>`:""}<p class="muted" style="margin:10px 0 0;font-size:12px">Done tasks: low 5, medium 10, high 15, Must Do 25. Missed: −5 (Must Do −15). Perfect day +50. Night audit +20. Focus, training and reading are capped per day.</p></div>`;
+}
+const _renderDashboardBase=renderDashboard;
+renderDashboard=function(){_renderDashboardBase();const h=$("dashboard").querySelector(".hero");if(h)h.insertAdjacentHTML("afterend",xpCardHtml())};
+
+/* ---------- navigation, titles and render hook for the calendar ---------- */
+function buildNav(){
+ const items=[["dashboard","01","Command Center"],["today","02","Today"],["protocol","03","Protocol"],["school","04","School"],["skills","05","Future Skills"],["knowledge","06","Knowledge"],["training","07","Training"],["reading","08","Reading"],["goals","09","Goals"],["analytics","10","Analytics"],["journal","11","Journal"],["settings","12","Settings"],["work","13","Work"],["calendar","14","Calendar"]];
+ $("nav").innerHTML='<div class="navTitle">OPERATIONS</div>'+items.map(x=>`<button data-view="${x[0]}" onclick="navigate('${x[0]}')"><span class="num">${x[1]}</span>${x[2]}</button>`).join("");
+ $("mobileNav").innerHTML=items.slice(0,6).map(x=>`<button data-view="${x[0]}" onclick="navigate('${x[0]}')">${x[1]}<br>${x[2]}</button>`).join("");
+}
+function showView(id){
+ document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));
+ document.querySelectorAll("#nav button,#mobileNav button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
+ const titles={dashboard:"Command Center",today:"Today",protocol:"Daily Protocol",school:"School",skills:"Future Skills",knowledge:"Knowledge Lab",training:"Training",reading:"Reading",goals:"Goals & Roadmap",analytics:"Analytics",journal:"Journal",settings:"Settings",work:"Work",calendar:"Calendar"};
+ $("pageTitle").textContent=titles[id]||"Command Center";
+ $("dateText").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+ currentView=id;closeSidebar();
+}
+function render(){
+ if(isBeforeStart()){updateStartLock();return;}
+ processFreezeEligibility();ensureDay();applySettings();
+ $("sideScore").textContent=scoreOf()+"%";$("sideStreak").textContent=currentStreak();$("sideFreezes").textContent=state.freezes;
+ const L=xpLevel(totalXP());if($("sideXP"))$("sideXP").textContent=L.lv+" · "+xpRank(L.lv);
+ if(state.xpSeen&&L.lv>state.xpSeen)toast("Level up! You are now level "+L.lv+" — "+xpRank(L.lv)+".","good");
+ if(state.xpSeen!==L.lv){state.xpSeen=L.lv;save()}
+ renderDashboard();renderToday();renderProtocol();renderSchool();renderSkills();renderKnowledge();renderTraining();renderReading();renderGoals();renderAnalytics();renderJournal();renderSettings();renderWork();renderCalendar();
+ showView(currentView);
+}
+
+/* ---------- CALENDAR: past days slashed + read-only, easier levels ---------- */
+(function(){if($("calStyle2"))return;const s=document.createElement("style");s.id="calStyle2";s.textContent=`
+.calCell{position:relative;overflow:hidden}
+.calCell.past::after{content:"/";position:absolute;inset:0;display:grid;place-items:center;font-size:78px;font-weight:200;line-height:1;color:rgba(224,24,56,.3);pointer-events:none}
+.calCell.past b{opacity:.65}
+.roBadge{font-size:10px;padding:4px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+@media(max-width:800px){.calCell.past::after{font-size:52px}}`;document.head.appendChild(s)})();
+
+/* levels: level n -> n+1 costs 50*n XP (50, 100, 150, ...) */
+function xpLevel(x){
+ let lv=0,base=0;
+ while(x>=base+50*(lv+1)){base+=50*(lv+1);lv++}
+ const next=base+50*(lv+1);
+ return{lv,base,next,pct:Math.round((x-base)/(next-base)*100)};
+}
+
+/* adding/deleting is only allowed for today and future days */
+function openEventModal(date){
+ const d=date&&date>=today()?date:today();
+ openModal(`<div class="modalHead"><h2>New event</h2><button class="btn iconBtn" onclick="closeModal()">×</button></div>
+ <div class="form"><div class="field"><label>Title</label><input class="input" id="evTitle" placeholder="e.g. Maths test, dentist, football match"></div>
+ <div class="formRow"><div class="field"><label>Date</label><input class="input" id="evDate" type="date" min="${today()}" value="${d}"></div><div class="field"><label>Time (optional)</label><input class="input" id="evTime" type="time"></div></div>
+ <div class="field"><label>Note (optional)</label><textarea class="textarea" id="evNote"></textarea></div>
+ <button class="btn primary" onclick="saveEvent()">Save event</button></div>`);
+ setTimeout(()=>{const e=$("evTitle");if(e)e.focus()},50);
+}
+function saveEvent(){
+ const title=$("evTitle").value.trim(),date=$("evDate").value;
+ if(!title||!date){toast("Add a title and a date.");return}
+ if(date<today()){toast("Past days are read-only. Pick today or a future day.");return}
+ state.events=state.events||[];state.events.push({id:uid(),date,time:$("evTime").value,title,note:$("evNote").value.trim()});
+ const dt=dateFromKey(date);calY=dt.getFullYear();calM=dt.getMonth();calSel=date;
+ save();closeModal();render();toast("Event saved.","good");
+}
+function deleteEvent(id){
+ const e=(state.events||[]).find(x=>x.id===id);if(!e)return;
+ if(e.date<today()){toast("Past days are read-only.");return}
+ state.events=state.events.filter(x=>x.id!==id);save();render();toast("Event deleted.");
+}
+function deleteOneOff(id){
+ const t=taskById(id);if(!t)return;
+ if(t.once<today()){toast("Past days are read-only.");return}
+ confirmBox('Delete "'+t.name+'"?',"doDeleteTask('"+id+"')");
+}
+
+function renderCalendar(){
+ const root=$("calendar");if(!root)return;
+ const first=new Date(calY,calM,1),off=(first.getDay()+6)%7,dim=new Date(calY,calM+1,0).getDate(),cells=[];
+ for(let i=0;i<off;i++)cells.push('<div class="calCell empty"></div>');
+ for(let n=1;n<=dim;n++){
+  const k=calY+"-"+pad(calM+1)+"-"+pad(n),ev=eventsOn(k).length,oo=oneOffsOn(k).length,isPast=k<today(),hasData=k>=START_DATE&&k<=today()&&state.days[k];
+  cells.push(`<div class="calCell ${isPast?"past":""} ${k===today()?"isToday":""} ${k===calSel?"sel":""}" onclick="calSelect('${k}')"><b>${n}</b><div class="calMarks">${hasData?`<span class="calScore">${scoreOf(k)}%</span>`:""}${oo?`<span title="One-day tasks">📌${oo}</span>`:""}${ev?`<span title="Events">●${ev}</span>`:""}</div></div>`);
+ }
+ const past=calSel<today(),evs=eventsOn(calSel),oos=oneOffsOn(calSel),c=state.days[calSel]&&calSel>=START_DATE?dayCounts(calSel):null;
+ const stOf=t=>past?resolvedStatus(calSel,t.id):(calSel>today()?"scheduled":taskStatus(calSel,t.id));
+ root.innerHTML=`<div class="card"><div class="calHead"><h2 style="margin:0">${first.toLocaleDateString(undefined,{month:"long",year:"numeric"})}</h2><div class="actions"><button class="btn" onclick="calMove(-1)">&lt;</button><button class="btn" onclick="calToday()">Today</button><button class="btn" onclick="calMove(1)">&gt;</button></div></div>
+ <div class="calGrid">${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<div class="calDow">${d}</div>`).join("")}${cells.join("")}</div>
+ <p class="muted" style="margin:10px 0 0;font-size:12px">📌 one-day tasks • ● events • green % = that day's score • slashed days are in the past (read-only)</p></div>
+ <div class="card" style="margin-top:14px"><div class="sectionHead" style="margin-top:0"><h2>${fmtLong(calSel)}</h2><div class="chips">${past?'<span class="roBadge">Read-only</span>':""}${c?`<span class="badge">Score ${scoreOf(calSel)}%</span>`:""}</div></div>
+ ${past?"":`<div class="actions"><button class="btn primary" onclick="openEventModal('${calSel}')">+ Event</button><button class="btn" onclick="openOneOffModal('${calSel}')">+ One-day task</button></div>`}
+ ${past&&c?`<div class="statusSummary"><span class="stChip st-done"><b>${c.done}</b> ✓ Done</span><span class="stChip st-missed"><b>${c.missed}</b> ✕ Missed</span><span class="stChip st-skipped"><b>${c.skipped}</b> ⏭ Skipped</span><span class="stChip st-impossible"><b>${c.impossible}</b> 🚫 Impossible</span></div>`:""}
+ <h3 style="margin-top:16px">One-day tasks</h3>${oos.map(t=>`<div class="note"><b>${escapeHtml(t.name)} <span class="priority ${t.priority}">${t.priority==="must"?"Must Do":t.priority}</span></b><span class="muted">${stOf(t)}</span>${past?"":`<button class="btn danger" style="float:right" onclick="deleteOneOff('${t.id}')">Delete</button>`}</div>`).join("")||`<div class="empty">None for this day.</div>`}
+ <h3 style="margin-top:16px">Events</h3>${evs.map(e=>`<div class="note"><b>${e.time?escapeHtml(e.time)+" — ":""}${escapeHtml(e.title)}</b>${e.note?`<div class="muted">${escapeHtml(e.note)}</div>`:""}${past?"":`<button class="btn danger" style="margin-top:6px" onclick="deleteEvent('${e.id}')">Delete</button>`}</div>`).join("")||`<div class="empty">No events.</div>`}</div>`;
+}
+
+/* ---------- XP: current XP + all-time XP earned (penalties never counted) ---------- */
+function allTimeXP(){
+ return weekKeys().reduce((s,k)=>{const p=dayXP(k);return s+p.tasks+p.focus+p.training+p.reading+p.audit+p.perfect},0);
+}
+function lostXP(){
+ return weekKeys().reduce((s,k)=>s+Math.abs(dayXP(k).missed),0);
+}
+function xpCardHtml(){
+ const x=totalXP(),L=xpLevel(x),p=dayXP(today()),t=Object.values(p).reduce((a,b)=>a+b,0),all=allTimeXP(),lost=lostXP();
+ const rows=[["Tasks",p.tasks],["Focus",p.focus],["Training",p.training],["Reading",p.reading],["Night audit",p.audit],["Perfect day",p.perfect],["Missed",p.missed]].filter(r=>r[1]!==0);
+ return `<div class="card" style="margin-top:14px"><div class="eyebrow">XP • LEVEL</div>
+ <div class="big" style="margin:4px 0 10px">Level ${L.lv} <span class="accent" style="font-size:16px">${xpRank(L.lv)}</span></div>
+ <div class="grid g3" style="margin-bottom:12px">
+  <div class="card stat" style="min-height:0;padding:12px"><div class="eyebrow">CURRENT XP</div><div class="value" style="font-size:24px;margin-top:4px">${x}</div><div class="sub">after penalties</div></div>
+  <div class="card stat" style="min-height:0;padding:12px"><div class="eyebrow">ALL-TIME XP</div><div class="value good" style="font-size:24px;margin-top:4px">${all}</div><div class="sub">earned, penalties not counted</div></div>
+  <div class="card stat" style="min-height:0;padding:12px"><div class="eyebrow">LOST TO MISSES</div><div class="value bad" style="font-size:24px;margin-top:4px">${lost}</div><div class="sub">subtracted from current</div></div>
+ </div>
+ <div class="progress" style="margin:10px 0"><i style="width:${L.pct}%"></i></div>
+ <p class="muted" style="margin:0">${L.next-x} XP to level ${L.lv+1} • Today ${t>=0?"+":""}${t} XP</p>
+ ${rows.length?`<div class="chips" style="margin-top:10px">${rows.map(r=>`<span class="chip">${r[0]} ${r[1]>0?"+":""}${r[1]}</span>`).join("")}</div>`:""}
+ <p class="muted" style="margin:10px 0 0;font-size:12px">Done tasks: low 5, medium 10, high 15, Must Do 25. Missed: −5 (Must Do −15). Perfect day +50. Night audit +20. Focus, training and reading are capped per day.</p></div>`;
+}
+
+/* ---------- CALENDAR: slash from top-right to bottom-left, box colour ---------- */
+(function(){
+ const old=$("calStyle3");if(old)old.remove();
+ const s=document.createElement("style");s.id="calStyle3";
+ s.textContent=`
+.calCell.past::after{
+ content:"";position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(to top left,transparent calc(50% - 1px),var(--line) calc(50% - 1px),var(--line) calc(50% + 1px),transparent calc(50% + 1px));
+}`;
+ document.head.appendChild(s);
+})();
+
+buildNav();
+updateStartLock();
+if(!isBeforeStart()){ensureDay();applySettings();render();}
+setInterval(()=>{
+ updateStartLock();
+ if(!isBeforeStart() && lastDate!==today()){lastDate=today();processFreezeEligibility();ensureDay();save();render();toast("Day 1 begins now. Today's checklist is fresh.","good");}
+},1000);
+if(!isBeforeStart() && state.timer.running)startTimerLoop();
+
+
+
+</script>
+</body>
+</html>
