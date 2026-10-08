@@ -1817,6 +1817,61 @@ function xpCardHtml(){
  document.head.appendChild(s);
 })();
 
+/* ---------- FUTURE SKILLS: total per category + one-time log repair ---------- */
+function reconcileSkills(){
+ let changed=false;
+ SKILLS.forEach(s=>{
+  const id=s[0],logged=state.skillSessions.filter(x=>x.skill===id).reduce((a,x)=>a+x.minutes,0),total=state.skills[id]||0,diff=logged-total;
+  if(diff!==0){
+   const last=state.skillSessions.filter(x=>x.skill===id).slice(-1)[0];
+   state.skillSessions.push({id:uid(),date:last?last.date:today(),skill:id,minutes:-diff,source:"adjust"});
+   changed=true;
+  }
+ });
+ if(changed)save();
+}
+function renderSkills(){
+ reconcileSkills();
+ const t=state.timer;
+ $("skills").innerHTML=`<div class="card hero"><div class="eyebrow">FUTURE SKILLS</div><h2>Build skills that compound.</h2><p>Every minute is logged locally. Use the tiny ±1 controls when your session was slightly different; larger controls are still there for speed.</p></div>
+ <div class="sectionHead"><h2>Skill ledger</h2><span class="badge">${formatMin(totalFocus(30))} focus in 30 days</span></div>
+ <div class="skillGrid">${SKILLS.map(s=>`<div class="skillCard"><h3>${s[1]}</h3><div class="muted">${s[2]}</div><div class="mins">${formatMin(skillTotal(s[0]))}</div><div class="progress" style="margin-top:9px"><i style="width:${Math.min(100,skillTotal(s[0])/600*100)}%"></i></div>
+ <div class="miniBtns">
+ <button class="btn" onclick="addSkill('${s[0]}',-30)">−30</button><button class="btn" onclick="addSkill('${s[0]}',-15)">−15</button><button class="btn" onclick="addSkill('${s[0]}',-5)">−5</button><button class="btn" onclick="addSkill('${s[0]}',-1)">−1</button>
+ <button class="btn" onclick="addSkill('${s[0]}',1)">+1</button><button class="btn" onclick="addSkill('${s[0]}',5)">+5</button><button class="btn" onclick="addSkill('${s[0]}',15)">+15</button><button class="btn" onclick="addSkill('${s[0]}',30)">+30</button>
+ </div></div>`).join("")}</div>
+ <div class="grid g2" style="margin-top:14px">
+ <div class="card"><div class="sectionHead"><h2>Focus timer</h2><span class="badge">${SKILLS.find(x=>x[0]===t.skill)?.[1]||"Coding"}</span></div><div class="timer"><div class="timerTime" id="timerDisplay">${timeString(t.remaining)}</div><div class="timerBar"><div class="progress"><i style="width:${Math.max(0,100-(t.remaining/t.total*100))}%"></i></div></div><div class="chips">${SKILLS.map(s=>`<button class="chip ${t.skill===s[0]?"active":""}" onclick="selectTimerSkill('${s[0]}')">${s[1]}</button>`).join("")}</div><div class="actions"><button class="btn" onclick="setTimer(1)">1m</button><button class="btn" onclick="setTimer(5)">5m</button><button class="btn" onclick="setTimer(15)">15m</button><button class="btn" onclick="setTimer(25)">25m</button><button class="btn" onclick="setTimer(50)">50m</button><button class="btn" onclick="setTimer(90)">90m</button></div><div class="actions"><button class="btn primary" onclick="startTimer()">Start</button><button class="btn" onclick="pauseTimer()">Pause</button><button class="btn danger" onclick="resetTimer()">Reset</button></div></div></div>
+ <div class="card" style="grid-column:1/-1">${skillsChartHtml()}</div></div>`;
+}
+
+/* ---------- FUTURE SKILLS: fixed daily target (average of previous days) ---------- */
+function skillDailyAvg(id){
+ const prevDays=weekKeys().length-1;
+ if(prevDays<1)return 60;
+ const before=Math.max(0,skillTotal(id)-skillToday(id));
+ const avg=before/prevDays;
+ return avg>0?avg:60;
+}
+function renderSkills(){
+ reconcileSkills();
+ const t=state.timer;
+ $("skills").innerHTML=`<div class="card hero"><div class="eyebrow">FUTURE SKILLS</div><h2>Build skills that compound.</h2><p>Every minute is logged locally. Use the tiny ±1 controls when your session was slightly different; larger controls are still there for speed.</p></div>
+ <div class="sectionHead"><h2>Skill ledger</h2><span class="badge">${formatMin(totalFocus(30))} focus in 30 days</span></div>
+ <div class="skillGrid">${SKILLS.map(s=>{
+  const today_=skillToday(s[0]),avg=skillDailyAvg(s[0]),pct=avg>0?Math.min(100,Math.round(today_/avg*100)):0;
+  return `<div class="skillCard"><h3>${s[1]}</h3><div class="muted">${s[2]}</div><div class="mins">${formatMin(today_)}</div><small class="muted">all time ${formatMin(skillTotal(s[0]))}</small><div class="progress" style="margin-top:9px" title="Daily average: ${formatMin(avg)}"><i style="width:${pct}%"></i></div>
+ <div class="miniBtns">
+ <button class="btn" onclick="addSkill('${s[0]}',-30)">−30</button><button class="btn" onclick="addSkill('${s[0]}',-15)">−15</button><button class="btn" onclick="addSkill('${s[0]}',-5)">−5</button><button class="btn" onclick="addSkill('${s[0]}',-1)">−1</button>
+ <button class="btn" onclick="addSkill('${s[0]}',1)">+1</button><button class="btn" onclick="addSkill('${s[0]}',5)">+5</button><button class="btn" onclick="addSkill('${s[0]}',15)">+15</button><button class="btn" onclick="addSkill('${s[0]}',30)">+30</button>
+ </div></div>`}).join("")}</div>
+ <div class="grid g2" style="margin-top:14px">
+ <div class="card"><div class="sectionHead"><h2>Focus timer</h2><span class="badge">${SKILLS.find(x=>x[0]===t.skill)?.[1]||"Coding"}</span></div><div class="timer"><div class="timerTime" id="timerDisplay">${timeString(t.remaining)}</div><div class="timerBar"><div class="progress"><i style="width:${Math.max(0,100-(t.remaining/t.total*100))}%"></i></div></div><div class="chips">${SKILLS.map(s=>`<button class="chip ${t.skill===s[0]?"active":""}" onclick="selectTimerSkill('${s[0]}')">${s[1]}</button>`).join("")}</div><div class="actions"><button class="btn" onclick="setTimer(1)">1m</button><button class="btn" onclick="setTimer(5)">5m</button><button class="btn" onclick="setTimer(15)">15m</button><button class="btn" onclick="setTimer(25)">25m</button><button class="btn" onclick="setTimer(50)">50m</button><button class="btn" onclick="setTimer(90)">90m</button></div><div class="actions"><button class="btn primary" onclick="startTimer()">Start</button><button class="btn" onclick="pauseTimer()">Pause</button><button class="btn danger" onclick="resetTimer()">Reset</button></div></div></div>
+ <div class="card" style="grid-column:1/-1">${skillsChartHtml()}</div></div>`;
+}
+
+
+
 buildNav();
 updateStartLock();
 if(!isBeforeStart()){ensureDay();applySettings();render();}
